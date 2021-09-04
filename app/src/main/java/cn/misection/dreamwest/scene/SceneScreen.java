@@ -1094,14 +1094,14 @@ public class SceneScreen extends Screen {
                 if (p.x >= 57 && p.x <= 61 && p.y >= 37 && p.y <= 38) {
                     PlayerStatus heroStatus = getHeroStatus();
                     heroStatus.setSceneLocation(new Point(15, 10));
-                    MainActivity.instance().setScreen(SceneHandler.createSceneQkd());
+                    MainActivity.getInstance().setScreen(SceneHandler.createSceneQkd());
                 }
             } else if ("1147".equals(getSceneId())) {
                 //跳转到五庄外景
                 if (p.x >= 13 && p.x <= 16 && p.y >= 6 && p.y <= 8) {
                     PlayerStatus heroStatus = getHeroStatus();
                     heroStatus.setSceneLocation(new Point(53, 34));
-                    MainActivity.instance().setScreen(SceneHandler.createSceneWz());
+                    MainActivity.getInstance().setScreen(SceneHandler.createSceneWz());
                 }
 
             }

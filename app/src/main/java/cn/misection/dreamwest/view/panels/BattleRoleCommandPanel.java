@@ -46,7 +46,7 @@ public class BattleRoleCommandPanel extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("选择法术");
                 //TODO 选择法术
-                UIHelper.prompt(MainActivity.instance().getScreen(), "暂不支持法术", 3000);
+                UIHelper.prompt(MainActivity.getInstance().getScreen(), "暂不支持法术", 3000);
             }
         };
         panel.add(btnMagic);
@@ -56,7 +56,7 @@ public class BattleRoleCommandPanel extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("选择道具");
                 //TODO 选择道具
-                UIHelper.prompt(MainActivity.instance().getScreen(), "暂不支持道具", 3000);
+                UIHelper.prompt(MainActivity.getInstance().getScreen(), "暂不支持道具", 3000);
             }
         };
         panel.add(btnItem);
@@ -66,7 +66,7 @@ public class BattleRoleCommandPanel extends BaseUIBuilder {
             public void doClick() {
                 try {
                     System.err.println("选择防御");
-                    BattleScreen screen = (BattleScreen) MainActivity.instance().getScreen();
+                    BattleScreen screen = (BattleScreen) MainActivity.getInstance().getScreen();
                     screen.defendCmd();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -80,7 +80,7 @@ public class BattleRoleCommandPanel extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("选择捕捉");
                 //TODO 选择捕捉
-                BattleScreen screen = (BattleScreen) MainActivity.instance().getScreen();
+                BattleScreen screen = (BattleScreen) MainActivity.getInstance().getScreen();
                 UIHelper.prompt(screen, "暂不支持捕捉", 3000);
             }
         };
@@ -91,7 +91,7 @@ public class BattleRoleCommandPanel extends BaseUIBuilder {
             public void doClick() {
                 try {
                     System.err.println("选择逃跑");
-                    BattleScreen screen = (BattleScreen) MainActivity.instance().getScreen();
+                    BattleScreen screen = (BattleScreen) MainActivity.getInstance().getScreen();
                     screen.runawayCmd();
                 } catch (Exception e) {
                     e.printStackTrace();

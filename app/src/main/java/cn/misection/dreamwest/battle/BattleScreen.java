@@ -127,7 +127,7 @@ public class BattleScreen extends Screen {
         }
         //叠加战斗背景图案
         DisplayMetrics dm = new DisplayMetrics();
-        MainActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MainActivity.getInstance().getWindowManager().getDefaultDisplay().getMetrics(dm);
         Bitmap battleMask = SpriteFactory.loadAnimationAsBitmap("assets/addon/battlebg.tcp", 0)[0];
         battleMask.setDensity(dm.densityDpi);
         canvas.drawBitmap(battleMask, 0, 0, null);
@@ -297,7 +297,7 @@ public class BattleScreen extends Screen {
         int h = g.getCanvas().getHeight();
         int d = g.getCanvas().getDensity();
         DisplayMetrics dm = new DisplayMetrics();
-        MainActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MainActivity.getInstance().getWindowManager().getDefaultDisplay().getMetrics(dm);
 //        System.out.println("canvas: width: "+w+", height: "+h+", density: "+d+", dm: "+dm.densityDpi);
         Paint paint = new Paint();
         paint.setTextAlign(Paint.Align.LEFT);

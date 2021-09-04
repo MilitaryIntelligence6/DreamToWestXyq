@@ -61,10 +61,11 @@ public class MainActivity extends LGameAndroid2DActivity {
 
     public MainActivity() {
         // FIXME: 2021/9/4 这一句离谱语句不能少;
+        // FIXME: 2021/9/4 离谱的是 构造还鼻血为 public;
         instance = this;
     }
 
-    public static MainActivity instance() {
+    public static MainActivity getInstance() {
         if (instance == null) {
             synchronized (MainActivity.class) {
                 if (instance == null) {

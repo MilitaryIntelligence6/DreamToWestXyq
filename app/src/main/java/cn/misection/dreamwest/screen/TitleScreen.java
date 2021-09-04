@@ -38,7 +38,7 @@ public class TitleScreen extends Screen {
 
     public TitleScreen() {
         DisplayMetrics dm = new DisplayMetrics();
-        MainActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MainActivity.getInstance().getWindowManager().getDefaultDisplay().getMetrics(dm);
         this.dm = dm;
         animations = new Animation[4];
     }
@@ -57,7 +57,7 @@ public class TitleScreen extends Screen {
         start = new LButton(btnAnim.getLImages(), "", btnAnim.getWidth(), btnAnim.getHeight(), 0, 0) {
             public void doClick() {
                 start.setEnabled(false);
-                MainActivity.instance().setScreen(createNextScreen());
+                MainActivity.getInstance().setScreen(createNextScreen());
             }
         };
         start.setLocation(520, 180);
@@ -86,7 +86,7 @@ public class TitleScreen extends Screen {
     }
 
     private ScenarioScreen createNextScreen() {
-        return new ScenarioScreen(MainActivity.instance(), "new", new ScreenCallback() {
+        return new ScenarioScreen(MainActivity.getInstance(), "new", new ScreenCallback() {
             public void onExit(MainActivity activity, Screen screen) {
                 activity.setScreen(SceneHandler.createSceneWz());
             }
