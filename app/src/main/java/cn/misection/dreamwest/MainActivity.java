@@ -33,18 +33,6 @@ public class MainActivity extends LGameAndroid2DActivity {
 
     private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;
 
-    /**
-     * 人物升级经验表
-     */
-    private static final int[] levelExpTable =
-            {40, 110, 237, 450, 779, 1252, 1898, 2745, 3822, 5159, 6784, 8726, 11013, 13674, 16739, 20236, 24194, 28641, 330606, 39119,
-                    45208, 51902, 59229, 67218, 75899, 85300, 95450, 106377, 118110, 130679, 144112, 158438, 173685, 189882, 207059,
-                    225244, 244466, 264753, 286134, 308639, 332296, 357134, 383181, 410466, 439019, 468868, 500042, 532569, 566478,
-                    601799, 638560, 676790, 716517, 757770, 800579, 844972, 890978, 938625, 987942, 1038959, 1091704, 1146206, 1202493,
-                    1260594, 1320539, 1382356, 1446074, 1511721, 1579326, 1648919, 1720528, 1794182, 1869909, 1947738, 2027699,
-                    2109820, 2194130, 2280657, 2369430, 2460479, 2553832, 2649518, 2747565, 2848002, 2950859, 3056164, 3163946,
-                    3274233, 3387054, 3502439, 3620416, 3741014, 3864261, 3990186, 4118819, 4250188, 4384322, 4521249, 4660998, 4803599};
-
     public static LFont DEFAULT_FONT = LFont.getFont(LSystem.FONT_NAME, 0, 16);
 
     private static boolean debug;
@@ -144,16 +132,6 @@ public class MainActivity extends LGameAndroid2DActivity {
         }
     }
 
-    /**
-     * 获取等级的升级经验
-     *
-     * @param level
-     * @return
-     */
-    public static long getLevelExp(int level) {
-        return levelExpTable[level];
-    }
-
 //    public void saveScreen(SceneScreen screen){
 //        screenStatus.clear();
 //        screenStatus.put("sceneId", screen.getSceneId());
@@ -208,7 +186,7 @@ public class MainActivity extends LGameAndroid2DActivity {
 //        screenStatus.clear();
     }
 
-    public void destoryLastScreen() {
+    public void destroyLastScreen() {
         if (lastScreen != null) {
             lastScreen.destroy();
             lastScreen = null;

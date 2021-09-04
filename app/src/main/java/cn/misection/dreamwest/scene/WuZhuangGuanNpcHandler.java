@@ -1,16 +1,17 @@
 package cn.misection.dreamwest.scene;
 
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.battle.BattleEvent;
 import cn.misection.dreamwest.battle.BattleHelper;
 import cn.misection.dreamwest.battle.BattleListener;
 import cn.misection.dreamwest.battle.BattleScreen;
+import cn.misection.dreamwest.constant.ExpData;
 import cn.misection.dreamwest.sprite.PlayerStatus;
 import cn.misection.dreamwest.view.UIHelper;
-
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 五庄观NPC对话
@@ -50,75 +51,93 @@ public class WuZhuangGuanNpcHandler implements NpcDialogueHandler {
     @Override
     public void onChoice(SceneScreen scene, String npcName, int choiceIndex, String choice) {
         String sceneId = scene.getSceneId();
-        if ("1146".equals(sceneId)) {//五庄观
-            if ("明月".equals(npcName)) {
+        // 五庄观;
+        switch (sceneId) {
+            case "1146":
+                switch (npcName) {
+                    case "明月":
+                        switch (choiceIndex) {
+                            case 0:
+                            case 1:
+                                break;
+                            case 2:
+                                //进入战斗
+                                BattleScreen battleScreen = BattleHelper.createBattleScreen(scene, scene.getHero(), BattleHelper.TYPE_SCHOOL1);
+                                battleScreen.setBattleListener(new BattleListener() {
+                                    @Override
+                                    public void battleWin(BattleEvent e) {
+                                        MainActivity.getInstance().restoreScreen();
+                                        //增加经验和金钱
+                                        SceneScreen screen = (SceneScreen) MainActivity.getInstance().getScreen();
+                                        PlayerStatus heroStatus = screen.getHeroStatus();
+                                        heroStatus.exp += heroStatus.level * 100;
+                                        heroStatus.money += heroStatus.level * 10;
+                                        while (heroStatus.exp > ExpData.getLevelExp(heroStatus.level)) {
+                                            heroStatus.exp -= ExpData.getLevelExp(heroStatus.level);
+                                            heroStatus.level += 1;
+                                        }
+                                        BattleHelper.initRoleStatus(heroStatus);
+                                        heroStatus.hp = heroStatus.maxHp;
+                                        UIHelper.prompt(screen, "恭喜恭喜，战斗获得胜利，你是最棒的！", 3000);
+
+                                        destroyBattleScreen();
+                                    }
+
+                                    @Override
+                                    public void battleDefeated(BattleEvent e) {
+                                        MainActivity.getInstance().restoreScreen();
+                                        //恢复气血
+                                        SceneScreen screen = (SceneScreen) MainActivity.getInstance().getScreen();
+                                        PlayerStatus heroStatus = screen.getHeroStatus();
+                                        heroStatus.hp = heroStatus.maxHp;
+                                        UIHelper.prompt(screen, "战斗失利了，不要灰心，加油努力，你一定行的！", 3000);
+
+                                        destroyBattleScreen();
+                                    }
+
+                                    @Override
+                                    public void battleTimeout(BattleEvent e) {
+                                    }
+
+                                    @Override
+                                    public void battleBreak(BattleEvent e) {
+                                    }
+                                });
+                                MainActivity.getInstance().setScreen(battleScreen);
+                                break;
+                            default:
+                                throw new IllegalStateException(String.format("Unexpected value: %d", choiceIndex));
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + npcName);
+                }
+                break;
+            // 五庄观大殿;
+            case "1147":
                 if (choiceIndex == 0) {
-
-                } else if (choiceIndex == 1) {
-
-                } else if (choiceIndex == 2) {
-                    //进入战斗
-                    BattleScreen battleScreen = BattleHelper.createBattleScreen(scene, scene.getHero(), BattleHelper.TYPE_SCHOOL1);
-                    battleScreen.setBattleListener(new BattleListener() {
-                        public void battleWin(BattleEvent e) {
-                            MainActivity.getInstance().restoreScreen();
-                            //增加经验和金钱
-                            SceneScreen screen = (SceneScreen) MainActivity.getInstance().getScreen();
-                            PlayerStatus heroStatus = screen.getHeroStatus();
-                            heroStatus.exp += heroStatus.level * 100;
-                            heroStatus.money += heroStatus.level * 10;
-                            while (heroStatus.exp > MainActivity.getLevelExp(heroStatus.level)) {
-                                heroStatus.exp -= MainActivity.getLevelExp(heroStatus.level);
-                                heroStatus.level += 1;
-                            }
-                            BattleHelper.initRoleStatus(heroStatus);
-                            heroStatus.hp = heroStatus.maxHp;
-                            UIHelper.prompt(screen, "恭喜恭喜，战斗获得胜利，你是最棒的！", 3000);
-
-                            destoryBattleScreen();
+                    if (patrolTask == 0) {
+                        UIHelper.prompt(MainActivity.getInstance().getScreen(), "门派任务完成得很好，这是为师奖励你的！", 3000);
+                        SceneScreen screen = (SceneScreen) MainActivity.getInstance().getScreen();
+                        PlayerStatus heroStatus = screen.getHeroStatus();
+                        heroStatus.exp += heroStatus.level * 500;
+                        heroStatus.money += heroStatus.level * 100;
+                        while (heroStatus.exp > ExpData.getLevelExp(heroStatus.level)) {
+                            heroStatus.exp -= ExpData.getLevelExp(heroStatus.level);
+                            heroStatus.level += 1;
                         }
-
-                        public void battleDefeated(BattleEvent e) {
-                            MainActivity.getInstance().restoreScreen();
-                            //恢复气血
-                            SceneScreen screen = (SceneScreen) MainActivity.getInstance().getScreen();
-                            PlayerStatus heroStatus = screen.getHeroStatus();
-                            heroStatus.hp = heroStatus.maxHp;
-                            UIHelper.prompt(screen, "战斗失利了，不要灰心，加油努力，你一定行的！", 3000);
-
-                            destoryBattleScreen();
-                        }
-
-                        public void battleTimeout(BattleEvent e) {
-                        }
-
-                        public void battleBreak(BattleEvent e) {
-                        }
-                    });
-                    MainActivity.getInstance().setScreen(battleScreen);
-                }
-            }
-        } else if ("1147".equals(sceneId)) {//五庄观大殿
-            if (choiceIndex == 0) {
-                if (patrolTask == 0) {
-                    UIHelper.prompt(MainActivity.getInstance().getScreen(), "门派任务完成得很好，这是为师奖励你的！", 3000);
-                    SceneScreen screen = (SceneScreen) MainActivity.getInstance().getScreen();
-                    PlayerStatus heroStatus = screen.getHeroStatus();
-                    heroStatus.exp += heroStatus.level * 500;
-                    heroStatus.money += heroStatus.level * 100;
-                    while (heroStatus.exp > MainActivity.getLevelExp(heroStatus.level)) {
-                        heroStatus.exp -= MainActivity.getLevelExp(heroStatus.level);
-                        heroStatus.level += 1;
+                        BattleHelper.initRoleStatus(heroStatus);
+                        patrolTask = -1;
+                    } else if (patrolTask > 0) {
+                        UIHelper.prompt(MainActivity.getInstance().getScreen(), "额？门派中还有妖怪，你赶紧去巡逻吧！", 3000);
+                    } else {
+                        UIHelper.prompt(MainActivity.getInstance().getScreen(), "最近门派里很多妖怪活动，你去巡逻一下！", 3000);
+                        patrolTask = 2;
                     }
-                    BattleHelper.initRoleStatus(heroStatus);
-                    patrolTask = -1;
-                } else if (patrolTask > 0) {
-                    UIHelper.prompt(MainActivity.getInstance().getScreen(), "额？门派中还有妖怪，你赶紧去巡逻吧！", 3000);
-                } else {
-                    UIHelper.prompt(MainActivity.getInstance().getScreen(), "最近门派里很多妖怪活动，你去巡逻一下！", 3000);
-                    patrolTask = 2;
                 }
-            }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + sceneId);
         }
     }
 
@@ -136,6 +155,7 @@ public class WuZhuangGuanNpcHandler implements NpcDialogueHandler {
                     UIHelper.prompt(MainActivity.getInstance().getScreen(), "一不小心你撞到门派中四处活动的妖怪了", 3000);
                     BattleScreen battleScreen = BattleHelper.createBattleScreen(scene, scene.getHero(), BattleHelper.TYPE_SCHOOL1);
                     battleScreen.setBattleListener(new BattleListener() {
+                        @Override
                         public void battleWin(BattleEvent e) {
                             lastPatrolTime = System.currentTimeMillis();
                             MainActivity.getInstance().restoreScreen();
@@ -145,8 +165,8 @@ public class WuZhuangGuanNpcHandler implements NpcDialogueHandler {
                             PlayerStatus heroStatus = screen.getHeroStatus();
                             heroStatus.exp += heroStatus.level * 100;
                             heroStatus.money += heroStatus.level * 10;
-                            while (heroStatus.exp > MainActivity.getLevelExp(heroStatus.level)) {
-                                heroStatus.exp -= MainActivity.getLevelExp(heroStatus.level);
+                            while (heroStatus.exp > ExpData.getLevelExp(heroStatus.level)) {
+                                heroStatus.exp -= ExpData.getLevelExp(heroStatus.level);
                                 heroStatus.level += 1;
                             }
                             BattleHelper.initRoleStatus(heroStatus);
@@ -155,9 +175,10 @@ public class WuZhuangGuanNpcHandler implements NpcDialogueHandler {
                             String msg2 = "妖怪再次被打倒了，灰溜溜的逃回老窝，你去向师父报告吧！";
                             UIHelper.prompt(screen, patrolTask > 0 ? msg1 : msg2, 3000);
 
-                            destoryBattleScreen();
+                            destroyBattleScreen();
                         }
 
+                        @Override
                         public void battleDefeated(BattleEvent e) {
                             lastPatrolTime = System.currentTimeMillis();
                             MainActivity.getInstance().restoreScreen();
@@ -167,12 +188,14 @@ public class WuZhuangGuanNpcHandler implements NpcDialogueHandler {
                             heroStatus.hp = heroStatus.maxHp;
                             UIHelper.prompt(screen, "战斗失利了，不要灰心，加油努力，你一定行的！", 3000);
 
-                            destoryBattleScreen();
+                            destroyBattleScreen();
                         }
 
+                        @Override
                         public void battleTimeout(BattleEvent e) {
                         }
 
+                        @Override
                         public void battleBreak(BattleEvent e) {
                         }
                     });
@@ -183,10 +206,11 @@ public class WuZhuangGuanNpcHandler implements NpcDialogueHandler {
         }
     }
 
-    private void destoryBattleScreen() {
-        new Timer("DestoryBattleScreen").schedule(new TimerTask() {
+    private void destroyBattleScreen() {
+        new Timer("DestroyBattleScreen").schedule(new TimerTask() {
+            @Override
             public void run() {
-                MainActivity.getInstance().destoryLastScreen();
+                MainActivity.getInstance().destroyLastScreen();
             }
         }, 100);
     }
