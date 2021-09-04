@@ -13,7 +13,7 @@ import org.loon.framework.android.game.LMode;
  * Date: 12-3-18
  * Time: 下午6:59
  */
-public class AVGActivity extends XYQActivity {
+public class AVGActivity extends MainActivity {
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
 

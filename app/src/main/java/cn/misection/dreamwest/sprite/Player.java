@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.graph.AbstractWidget;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
@@ -530,7 +530,7 @@ public class Player extends AbstractWidget {
             // 计算起点与目标点的弧度角
             double radian = Math.atan(1.0 * (nextStep.y - getSceneY()) / (nextStep.x - getSceneX()));
             // 计算移动量
-            int distance = (int) (XYQActivity.NORMAL_SPEED * elapsedTime);
+            int distance = (int) (MainActivity.NORMAL_SPEED * elapsedTime);
             dx = (int) (distance * Math.cos(radian));
             dy = (int) (distance * Math.sin(radian));
             // 修正移动方向
@@ -673,7 +673,7 @@ public class Player extends AbstractWidget {
         if (this.onceEffect != null) {
             onceEffect.draw(g, x, y);
         }
-        if (XYQActivity.isDebug()) {
+        if (MainActivity.isDebug()) {
             g.drawLine(x - 10, y, x + 10, y, paint);
             g.drawLine(x, y - 10, x, y + 10, paint);
         }
@@ -868,7 +868,7 @@ public class Player extends AbstractWidget {
         this.onceEffect = s;
         if (sound) {
             try {
-                XYQActivity.playEffectSound("sound/magic/" + name + ".mp3");
+                MainActivity.playEffectSound("sound/magic/" + name + ".mp3");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -886,7 +886,7 @@ public class Player extends AbstractWidget {
         if (this.weapon != null) {
             this.weapon.setRepeat(1);
         }
-        XYQActivity.playEffectSound("sound/char/" + this.getCharId() + "/" + state + ".mp3");
+        MainActivity.playEffectSound("sound/char/" + this.getCharId() + "/" + state + ".mp3");
     }
 
     /**

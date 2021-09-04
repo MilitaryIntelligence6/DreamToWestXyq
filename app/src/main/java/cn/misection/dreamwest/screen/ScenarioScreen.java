@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.screen;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.scene.ScreenCallback;
 
 import org.loon.framework.android.game.action.avg.AVGDialog;
@@ -30,17 +30,17 @@ public class ScenarioScreen extends AVGScreen {
     String flag = "自定义命令.";
     String[] selects = {"年轻的你是否也在追逐梦想呢？"};
     int type;
-    private XYQActivity activity;
+    private MainActivity activity;
     private String scriptId;
     private ScreenCallback callback;
 
-    public ScenarioScreen(XYQActivity activity, String scriptId) {
+    public ScenarioScreen(MainActivity activity, String scriptId) {
         super("assets/script/" + scriptId + ".txt", AVGDialog.getRMXPDialog("assets/images/w6.png", 520, 150));
         this.activity = activity;
         this.scriptId = scriptId;
     }
 
-    public ScenarioScreen(XYQActivity activity, String scriptId, ScreenCallback cb) {
+    public ScenarioScreen(MainActivity activity, String scriptId, ScreenCallback cb) {
         this(activity, scriptId);
         this.callback = cb;
     }

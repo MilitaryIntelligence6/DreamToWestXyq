@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 
 import org.loon.framework.android.game.core.graphics.LColor;
 import org.loon.framework.android.game.core.graphics.LComponent;
@@ -66,7 +66,7 @@ public class PromptLabel extends LComponent {
     }
 
     private LFont getFont() {
-        return XYQActivity.DEFAULT_FONT;
+        return MainActivity.DEFAULT_FONT;
     }
 
     @Override

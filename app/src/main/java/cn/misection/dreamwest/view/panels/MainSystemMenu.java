@@ -1,7 +1,7 @@
 package cn.misection.dreamwest.view.panels;
 
 import cn.misection.dreamwest.SpriteActivity;
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
 import cn.misection.dreamwest.view.BaseUIBuilder;
@@ -46,7 +46,7 @@ public class MainSystemMenu extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("保存进度");
                 //TODO 保存
-                UIHelper.prompt(XYQActivity.instance().getScreen(), "暂不支持", 3000);
+                UIHelper.prompt(MainActivity.instance().getScreen(), "暂不支持", 3000);
             }
         };
         btnSave.setImages(images);
@@ -60,7 +60,7 @@ public class MainSystemMenu extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("加载存档");
                 //TODO 加载游戏
-                UIHelper.prompt(XYQActivity.instance().getScreen(), "暂不支持", 3000);
+                UIHelper.prompt(MainActivity.instance().getScreen(), "暂不支持", 3000);
             }
         };
         btnLoad.setImages(images);
@@ -74,7 +74,7 @@ public class MainSystemMenu extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("新的开始");
                 //TODO 开始新的游戏
-                UIHelper.prompt(XYQActivity.instance().getScreen(), "暂不支持", 3000);
+                UIHelper.prompt(MainActivity.instance().getScreen(), "暂不支持", 3000);
             }
         };
         btnNew.setImages(images);
@@ -88,7 +88,7 @@ public class MainSystemMenu extends BaseUIBuilder {
             public void doClick() {
                 System.err.println("游戏选项");
                 //TODO 选项
-                UIHelper.prompt(XYQActivity.instance().getScreen(), "暂不支持", 3000);
+                UIHelper.prompt(MainActivity.instance().getScreen(), "暂不支持", 3000);
             }
         };
         btnOption.setImages(images);

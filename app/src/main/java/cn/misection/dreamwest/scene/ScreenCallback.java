@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.scene;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 
 import org.loon.framework.android.game.core.graphics.Screen;
 
@@ -12,5 +12,5 @@ import org.loon.framework.android.game.core.graphics.Screen;
  * Time: 上午12:03
  */
 public interface ScreenCallback {
-    void onExit(XYQActivity activity, Screen screen);
+    void onExit(MainActivity activity, Screen screen);
 }

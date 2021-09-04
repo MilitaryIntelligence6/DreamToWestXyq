@@ -6,7 +6,7 @@
 
     <application android:label="@string/app_name">
         <activity
-                android:name="cn.misection.dreamwest.XYQActivity"
+                android:name="cn.misection.dreamwest.MainActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="@string/app_name">
             <intent-filter>

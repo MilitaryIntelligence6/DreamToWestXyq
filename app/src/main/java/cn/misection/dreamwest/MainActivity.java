@@ -20,16 +20,19 @@ import java.util.Map;
  * Date: 12-3-18
  * Time: 下午6:59
  */
-public class XYQActivity extends LGameAndroid2DActivity {
+public class MainActivity extends LGameAndroid2DActivity {
 
-    private volatile static XYQActivity instance;
+    private volatile static MainActivity instance;
 
     public static final float NORMAL_SPEED = 0.13f;
     //    public static final float NORMAL_SPEED = 0.12f;
 //    public static final float BEVEL_SPEED = 0.071f;
     public static final int STEP_DISTANCE = 20;
+
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
+
     private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;
+
     /**
      * 人物升级经验表
      */
@@ -41,19 +44,34 @@ public class XYQActivity extends LGameAndroid2DActivity {
                     1260594, 1320539, 1382356, 1446074, 1511721, 1579326, 1648919, 1720528, 1794182, 1869909, 1947738, 2027699,
                     2109820, 2194130, 2280657, 2369430, 2460479, 2553832, 2649518, 2747565, 2848002, 2950859, 3056164, 3163946,
                     3274233, 3387054, 3502439, 3620416, 3741014, 3864261, 3990186, 4118819, 4250188, 4384322, 4521249, 4660998, 4803599};
+
     public static LFont DEFAULT_FONT = LFont.getFont(LSystem.FONT_NAME, 0, 16);
+
     private static boolean debug;
+
     private static AssetsSound backgroundSound;
+
     private static AssetsSound effectSound;
-    private Map<String, Object> screenStatus = new HashMap<String, Object>();
+
+    private final Map<String, Object> screenStatus = new HashMap<String, Object>();
+
     private Screen screen;
+
     private Screen lastScreen;
 
-    public XYQActivity() {
+    public MainActivity() {
+        // FIXME: 2021/9/4 这一句离谱语句不能少;
         instance = this;
     }
 
-    public static XYQActivity instance() {
+    public static MainActivity instance() {
+        if (instance == null) {
+            synchronized (MainActivity.class) {
+                if (instance == null) {
+                    instance = new MainActivity();
+                }
+            }
+        }
         return instance;
     }
 
@@ -148,7 +166,7 @@ public class XYQActivity extends LGameAndroid2DActivity {
     }
 
     public static void setDebug(boolean debug) {
-        XYQActivity.debug = debug;
+        MainActivity.debug = debug;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.scene;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 
 import org.loon.framework.android.game.core.LTransition;
 import org.loon.framework.android.game.core.graphics.Screen;
@@ -15,9 +15,9 @@ import org.loon.framework.android.game.core.timer.LTimerContext;
  */
 public class WorldScreen extends Screen {
 
-    private XYQActivity activity;
+    private MainActivity activity;
 
-    public WorldScreen(XYQActivity activity) {
+    public WorldScreen(MainActivity activity) {
         this.activity = activity;
     }
 

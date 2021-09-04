@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.view;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.log.Log;
 
 import org.loon.framework.android.game.core.graphics.LComponent;
@@ -45,7 +45,7 @@ public class UIHelper {
     public static void showDialog(Screen screen, String dialogId, Map<String, Object> params, boolean nocache) {
         Log.debug(UIHelper.class, "showDialog: " + dialogId);
         LPanel panel = uiCache.get(dialogId);
-        if (panel == null || nocache || XYQActivity.isDebug()) {
+        if (panel == null || nocache || MainActivity.isDebug()) {
             panel = UIFactory.createDialog(screen, dialogId, params);
 //            if(!nocache){
             uiCache.put(dialogId, panel);

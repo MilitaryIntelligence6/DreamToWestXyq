@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.view.panels;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.data.DataHelper;
 import cn.misection.dreamwest.sprite.PlayerStatus;
 import cn.misection.dreamwest.view.BaseUIBuilder;
@@ -83,7 +83,7 @@ public class HeroStatusPanel extends BaseUIBuilder {
         Label potentialityValue = new Label("" + data.getPotentiality(), 160, 260, 40, 30);
 
         Label expTitle = new Label("升级经验：", 10, 290, 60, 30);
-        Label expValue = new Label("" + XYQActivity.getLevelExp(data.getLevel()), 90, 290, 200, 30);
+        Label expValue = new Label("" + MainActivity.getLevelExp(data.getLevel()), 90, 290, 200, 30);
         Label gainExpTitle = new Label("获得经验：", 10, 310, 60, 30);
         Label gainExpValue = new Label("" + data.getExp(), 90, 310, 200, 30);
 

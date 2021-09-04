@@ -16,7 +16,8 @@ import java.util.Map;
  */
 public class DataHelper {
     public static final String HERO_STATUS = "hero_status";
-    private static Map<String, Object> dataStore = new HashMap<String, Object>();
+
+    private static Map<String, Object> dataStore = new HashMap<>();
 
     public static Object get(String dataId) {
         return dataStore.get(dataId);

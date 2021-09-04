@@ -25,7 +25,7 @@ import java.util.Random;
  * Date: 12-3-18
  * Time: 下午6:59
  */
-public class BattleActivity extends XYQActivity {
+public class BattleActivity extends MainActivity {
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
     private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;

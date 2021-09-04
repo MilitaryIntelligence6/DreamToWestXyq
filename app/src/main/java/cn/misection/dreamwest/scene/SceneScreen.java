@@ -3,22 +3,6 @@ package cn.misection.dreamwest.scene;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
-import cn.misection.dreamwest.XYQActivity;
-import cn.misection.dreamwest.graph.Animation;
-import cn.misection.dreamwest.graph.SpriteFactory;
-import cn.misection.dreamwest.log.Log;
-import cn.misection.dreamwest.map.MapConfig;
-import cn.misection.dreamwest.map.TileMap;
-import cn.misection.dreamwest.sprite.OptimizeAStar;
-import cn.misection.dreamwest.sprite.Player;
-import cn.misection.dreamwest.sprite.PlayerAdapter;
-import cn.misection.dreamwest.sprite.PlayerEvent;
-import cn.misection.dreamwest.sprite.PlayerStatus;
-import cn.misection.dreamwest.sprite.Searcher;
-import cn.misection.dreamwest.util.SearchUtils;
-import cn.misection.dreamwest.view.SRPGChoiceView;
-import cn.misection.dreamwest.view.UIHelper;
-
 import org.loon.framework.android.game.core.LSystem;
 import org.loon.framework.android.game.core.LTransition;
 import org.loon.framework.android.game.core.graphics.LFont;
@@ -36,6 +20,22 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.graph.Animation;
+import cn.misection.dreamwest.graph.SpriteFactory;
+import cn.misection.dreamwest.log.Log;
+import cn.misection.dreamwest.map.MapConfig;
+import cn.misection.dreamwest.map.TileMap;
+import cn.misection.dreamwest.sprite.OptimizeAStar;
+import cn.misection.dreamwest.sprite.Player;
+import cn.misection.dreamwest.sprite.PlayerAdapter;
+import cn.misection.dreamwest.sprite.PlayerEvent;
+import cn.misection.dreamwest.sprite.PlayerStatus;
+import cn.misection.dreamwest.sprite.Searcher;
+import cn.misection.dreamwest.util.SearchUtils;
+import cn.misection.dreamwest.view.SRPGChoiceView;
+import cn.misection.dreamwest.view.UIHelper;
+
 /**
  * 游戏场景地图界面
  * <p>
@@ -46,9 +46,9 @@ import java.util.List;
  */
 public class SceneScreen extends Screen {
 
-    final static private LFont fpsFont = LFont
+    private final static LFont fpsFont = LFont
             .getFont(LSystem.FONT_NAME, 0, 20);
-    final static private LFont dialogueFont = LFont
+    private final static LFont dialogueFont = LFont
             .getFont(LSystem.FONT_NAME, 0, 16);
 
     private int maxWidth;
@@ -186,7 +186,7 @@ public class SceneScreen extends Screen {
     public void onLoaded() {
         super.onLoaded();
         getHero().stop(true);
-        XYQActivity.playSound("music/" + this.getSceneId() + ".mp3");
+        MainActivity.playSound("music/" + this.getSceneId() + ".mp3");
     }
 
     @Override
@@ -702,7 +702,7 @@ public class SceneScreen extends Screen {
     }
 
     public Point sceneToLocal(Point p) {
-        return new Point(p.x * XYQActivity.STEP_DISTANCE, getMaxHeight() - p.y * XYQActivity.STEP_DISTANCE);
+        return new Point(p.x * MainActivity.STEP_DISTANCE, getMaxHeight() - p.y * MainActivity.STEP_DISTANCE);
     }
 
     public Point sceneToView(Point p) {
@@ -710,7 +710,7 @@ public class SceneScreen extends Screen {
     }
 
     public Point localToScene(Point p) {
-        return new Point(p.x / XYQActivity.STEP_DISTANCE, (getMaxHeight() - p.y) / XYQActivity.STEP_DISTANCE);
+        return new Point(p.x / MainActivity.STEP_DISTANCE, (getMaxHeight() - p.y) / MainActivity.STEP_DISTANCE);
     }
 
     public Point localToView(Point p) {
@@ -1013,8 +1013,8 @@ public class SceneScreen extends Screen {
 
         this.maxWidth = map.getWidth();
         this.maxHeight = map.getHeight();
-        sceneWidth = map.getWidth() / XYQActivity.STEP_DISTANCE;
-        sceneHeight = map.getHeight() / XYQActivity.STEP_DISTANCE;
+        sceneWidth = map.getWidth() / MainActivity.STEP_DISTANCE;
+        sceneHeight = map.getHeight() / MainActivity.STEP_DISTANCE;
         this.map = map;
         MapConfig cfg = map.getConfig();
         this.sceneId = cfg.getId();
@@ -1094,14 +1094,14 @@ public class SceneScreen extends Screen {
                 if (p.x >= 57 && p.x <= 61 && p.y >= 37 && p.y <= 38) {
                     PlayerStatus heroStatus = getHeroStatus();
                     heroStatus.setSceneLocation(new Point(15, 10));
-                    XYQActivity.instance().setScreen(SceneHandler.createSceneQkd());
+                    MainActivity.instance().setScreen(SceneHandler.createSceneQkd());
                 }
             } else if ("1147".equals(getSceneId())) {
                 //跳转到五庄外景
                 if (p.x >= 13 && p.x <= 16 && p.y >= 6 && p.y <= 8) {
                     PlayerStatus heroStatus = getHeroStatus();
                     heroStatus.setSceneLocation(new Point(53, 34));
-                    XYQActivity.instance().setScreen(SceneHandler.createSceneWz());
+                    MainActivity.instance().setScreen(SceneHandler.createSceneWz());
                 }
 
             }

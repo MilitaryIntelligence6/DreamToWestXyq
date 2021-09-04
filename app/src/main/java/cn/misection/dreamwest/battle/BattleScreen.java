@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.event.ActionDelegator;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
@@ -127,7 +127,7 @@ public class BattleScreen extends Screen {
         }
         //叠加战斗背景图案
         DisplayMetrics dm = new DisplayMetrics();
-        XYQActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MainActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
         Bitmap battleMask = SpriteFactory.loadAnimationAsBitmap("assets/addon/battlebg.tcp", 0)[0];
         battleMask.setDensity(dm.densityDpi);
         canvas.drawBitmap(battleMask, 0, 0, null);
@@ -157,7 +157,7 @@ public class BattleScreen extends Screen {
         lblMsg = new Label("战斗开始", 140, 400, 400, 30);
         add(lblMsg);
         UIHelper.showDialog(this, BATTLE_ROLE_CMD);
-        XYQActivity.playSound("music/2003.mp3");
+        MainActivity.playSound("music/2003.mp3");
 
         //异步加载资源
         eventDelegator.publish(new Runnable() {
@@ -207,7 +207,7 @@ public class BattleScreen extends Screen {
             //绘制伤害点数
             drawPoints(g);
 
-            if (XYQActivity.isDebug()) {
+            if (MainActivity.isDebug()) {
                 drawDebug(g);
             }
         } catch (Exception e) {
@@ -297,7 +297,7 @@ public class BattleScreen extends Screen {
         int h = g.getCanvas().getHeight();
         int d = g.getCanvas().getDensity();
         DisplayMetrics dm = new DisplayMetrics();
-        XYQActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MainActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
 //        System.out.println("canvas: width: "+w+", height: "+h+", density: "+d+", dm: "+dm.densityDpi);
         Paint paint = new Paint();
         paint.setTextAlign(Paint.Align.LEFT);
@@ -614,7 +614,7 @@ public class BattleScreen extends Screen {
         // 计算起点与目标点的弧度角
         double radian = Math.atan(1.0 * (targetY - movingPlayer.getY()) / (targetX - movingPlayer.getX()));
         // 计算移动量
-        int distance = (int) (XYQActivity.NORMAL_SPEED * 6 * elapsedTime);
+        int distance = (int) (MainActivity.NORMAL_SPEED * 6 * elapsedTime);
         dx = (int) (distance * Math.cos(radian));
         dy = (int) (distance * Math.sin(radian));
         // 修正移动方向
@@ -1047,14 +1047,14 @@ public class BattleScreen extends Screen {
             player.setState("rusha");
             Thread.sleep(500);
             if (this.success) {
-                XYQActivity.playEffectSound("assets/sound/addon/escape_ok.mp3");
+                MainActivity.playEffectSound("assets/sound/addon/escape_ok.mp3");
                 long interval = 50;
                 long t = 0;
                 while (t < duration) {
                     Thread.sleep(interval);
                     // 计算移动量
                     long elapsedTime = interval;
-                    int distance = (int) (2 * XYQActivity.NORMAL_SPEED * elapsedTime);
+                    int distance = (int) (2 * MainActivity.NORMAL_SPEED * elapsedTime);
                     int dx = distance; //向右下逃跑
                     int dy = distance;
                     if (player.getDirection() == Sprite.DIR_UP_LEFT) {//向左上逃跑

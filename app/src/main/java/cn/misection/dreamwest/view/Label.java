@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.view;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 
 import org.loon.framework.android.game.core.graphics.LColor;
 import org.loon.framework.android.game.core.graphics.LComponent;
@@ -19,7 +19,7 @@ public class Label extends LComponent {
 
     private String text;
 
-    private LFont font = XYQActivity.DEFAULT_FONT;
+    private LFont font = MainActivity.DEFAULT_FONT;
 
     private LColor color;
 

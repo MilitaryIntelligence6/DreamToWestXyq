@@ -15,7 +15,7 @@ import org.loon.framework.android.game.LMode;
  * Date: 12-3-18
  * Time: 下午6:59
  */
-public class SpriteActivity extends XYQActivity {
+public class SpriteActivity extends MainActivity {
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
     private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;

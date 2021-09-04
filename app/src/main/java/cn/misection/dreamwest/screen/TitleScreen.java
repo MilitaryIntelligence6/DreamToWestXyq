@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 
-import cn.misection.dreamwest.XYQActivity;
+import cn.misection.dreamwest.MainActivity;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
 import cn.misection.dreamwest.scene.SceneHandler;
@@ -38,7 +38,7 @@ public class TitleScreen extends Screen {
 
     public TitleScreen() {
         DisplayMetrics dm = new DisplayMetrics();
-        XYQActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        MainActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
         this.dm = dm;
         animations = new Animation[4];
     }
@@ -57,7 +57,7 @@ public class TitleScreen extends Screen {
         start = new LButton(btnAnim.getLImages(), "", btnAnim.getWidth(), btnAnim.getHeight(), 0, 0) {
             public void doClick() {
                 start.setEnabled(false);
-                XYQActivity.instance().setScreen(createNextScreen());
+                MainActivity.instance().setScreen(createNextScreen());
             }
         };
         start.setLocation(520, 180);
@@ -76,7 +76,7 @@ public class TitleScreen extends Screen {
         add(end);
 
         //播放音乐
-        XYQActivity.playSound("music/1514.mp3");
+        MainActivity.playSound("music/1514.mp3");
 
         animations[0] = SpriteFactory.loadAnimation("wzife/login/m1.tcp");
         animations[1] = SpriteFactory.loadAnimation("wzife/login/m2.tcp");
@@ -86,8 +86,8 @@ public class TitleScreen extends Screen {
     }
 
     private ScenarioScreen createNextScreen() {
-        return new ScenarioScreen(XYQActivity.instance(), "new", new ScreenCallback() {
-            public void onExit(XYQActivity activity, Screen screen) {
+        return new ScenarioScreen(MainActivity.instance(), "new", new ScreenCallback() {
+            public void onExit(MainActivity activity, Screen screen) {
                 activity.setScreen(SceneHandler.createSceneWz());
             }
         });
