@@ -1,12 +1,12 @@
 package com.androidxyq;
 
-import org.loon.framework.android.game.LMode;
-
 import android.os.Bundle;
 import android.view.Menu;
 
 import com.androidxyq.scene.SceneHandler;
 import com.androidxyq.view.UIHelper;
+
+import org.loon.framework.android.game.LMode;
 
 /**
  * Sprite 测试
@@ -18,21 +18,21 @@ import com.androidxyq.view.UIHelper;
 public class SpriteActivity extends XYQActivity {
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
-    private final static int CWJ_HEAP_SIZE = 5* 1024* 1024 ;
+    private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;
     private static boolean isMainMenuOpen = false;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         try {
-			Class<?> vmRumTimeClass;
-			vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
-			Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
-			vmRumTimeClass.getMethod("setTargetHeapUtilization", Float.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
-			vmRumTimeClass.getMethod("setMinimumHeapSize", Long.TYPE).invoke(runtime, CWJ_HEAP_SIZE);
-		} catch (Exception e) {
-			throw new RuntimeException("设置VM参数出错！");
-		}
+            Class<?> vmRumTimeClass;
+            vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
+            Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
+            vmRumTimeClass.getMethod("setTargetHeapUtilization", Float.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
+            vmRumTimeClass.getMethod("setMinimumHeapSize", Long.TYPE).invoke(runtime, CWJ_HEAP_SIZE);
+        } catch (Exception e) {
+            throw new RuntimeException("设置VM参数出错！");
+        }
     }
 
     @Override
@@ -46,30 +46,30 @@ public class SpriteActivity extends XYQActivity {
         this.showScreen();
 
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	
-    	if(false == isMainMenuOpen) {
-    		UIHelper.showDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
-    		isMainMenuOpen = true;      
-    	} else {
-    		UIHelper.hideDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
-    		isMainMenuOpen = false;
-    	}
-    	return false;
+
+        if (false == isMainMenuOpen) {
+            UIHelper.showDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
+            isMainMenuOpen = true;
+        } else {
+            UIHelper.hideDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
+            isMainMenuOpen = false;
+        }
+        return false;
     }
-    
+
     @Override
     public void openOptionsMenu() {
-    	UIHelper.showDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
-    	isMainMenuOpen = true;
+        UIHelper.showDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
+        isMainMenuOpen = true;
     }
-    
+
     @Override
     public void closeOptionsMenu() {
-    	UIHelper.hideDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
-    	isMainMenuOpen = false;
+        UIHelper.hideDialog(this.getScreen(), UIHelper.MAIN_SYSTEM_MENU);
+        isMainMenuOpen = false;
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.androidxyq;
 
-import org.loon.framework.android.game.LMode;
-
 import android.os.Bundle;
 
 import com.androidxyq.screen.ScenarioScreen;
+
+import org.loon.framework.android.game.LMode;
 
 /**
  * AVG 测试
@@ -20,14 +20,14 @@ public class AVGActivity extends XYQActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-		try {
-			Class<?> vmRumTimeClass;
-			vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
-			Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
-			vmRumTimeClass.getMethod("setTargetHeapUtilization", Long.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
-		} catch (Exception e) {
-			throw new RuntimeException("设置VM参数出错！");
-		}
+        try {
+            Class<?> vmRumTimeClass;
+            vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
+            Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
+            vmRumTimeClass.getMethod("setTargetHeapUtilization", Long.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
+        } catch (Exception e) {
+            throw new RuntimeException("设置VM参数出错！");
+        }
     }
 
     @Override

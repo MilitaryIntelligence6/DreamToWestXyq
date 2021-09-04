@@ -1,6 +1,7 @@
 package com.androidxyq.scene;
 
 import com.androidxyq.XYQActivity;
+
 import org.loon.framework.android.game.core.graphics.Screen;
 
 /**

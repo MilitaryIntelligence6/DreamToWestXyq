@@ -1,12 +1,14 @@
 package com.androidxyq.view.panels;
 
 import android.graphics.Bitmap;
+
 import com.androidxyq.XYQActivity;
 import com.androidxyq.battle.BattleScreen;
 import com.androidxyq.graph.Animation;
 import com.androidxyq.graph.SpriteFactory;
 import com.androidxyq.view.BaseUIBuilder;
 import com.androidxyq.view.UIHelper;
+
 import org.loon.framework.android.game.core.graphics.LImage;
 import org.loon.framework.android.game.core.graphics.component.LButton;
 import org.loon.framework.android.game.core.graphics.component.LPanel;
@@ -30,8 +32,8 @@ public class BattleRoleCommandPanel extends BaseUIBuilder {
     @Override
     public LPanel createUI(Map<String, Object> params) {
         //设置位置和宽高
-        int x=520,y=100,width=66,height=143;
-        LPanel panel = new LPanel(x, y,width,height);
+        int x = 520, y = 100, width = 66, height = 143;
+        LPanel panel = new LPanel(x, y, width, height);
         //设置背景
         Bitmap bg = SpriteFactory.loadAnimationAsBitmap("assets/wzife/dialog/warsummon.tcp", 0)[0];
         panel.setBackground(new LImage(bg));

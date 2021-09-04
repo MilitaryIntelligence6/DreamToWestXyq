@@ -11,5 +11,6 @@ import android.graphics.Bitmap;
  */
 public interface Frame extends Widget {
     int getDuration();
+
     Bitmap getImage();
 }

@@ -2,7 +2,7 @@ package com.androidxyq.sprite;
 
 import com.androidxyq.graph.ResourcesFactory;
 import com.androidxyq.graph.SpriteFactory;
-import org.loon.framework.android.game.action.sprite.Sprite;
+
 import org.loon.framework.android.game.core.graphics.LImage;
 
 /**
@@ -46,7 +46,7 @@ public class XSprite extends org.loon.framework.android.game.action.sprite.Sprit
         this.setDirection(animIndex);
     }
 
-    public void setDirection(int animIndex){
+    public void setDirection(int animIndex) {
         LImage[] images = ResourcesFactory.createLImages(SpriteFactory.loadAnimationAsBitmap(resName, animIndex));
         setAnimation(images, -1, ANIMATION_INTERVAL);
     }

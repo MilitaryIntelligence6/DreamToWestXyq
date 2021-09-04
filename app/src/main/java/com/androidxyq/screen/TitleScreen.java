@@ -3,11 +3,13 @@ package com.androidxyq.screen;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
+
 import com.androidxyq.XYQActivity;
 import com.androidxyq.graph.Animation;
 import com.androidxyq.graph.SpriteFactory;
 import com.androidxyq.scene.SceneHandler;
 import com.androidxyq.scene.ScreenCallback;
+
 import org.loon.framework.android.game.core.LSystem;
 import org.loon.framework.android.game.core.LTransition;
 import org.loon.framework.android.game.core.graphics.Screen;
@@ -18,29 +20,30 @@ import org.loon.framework.android.game.core.timer.LTimerContext;
 
 /**
  * 欢迎界面
- * @project xyq-android
+ *
  * @author gongdewei
- * @email：kylixs@qq.com
  * @version 0.1
+ * @project xyq-android
+ * @email：kylixs@qq.com
  */
 public class TitleScreen extends Screen {
 
-	LButton start, end;
+    LButton start, end;
 
-	LPaper title;
+    LPaper title;
 
     private DisplayMetrics dm;
 
     private Animation[] animations;
 
     public TitleScreen() {
-         DisplayMetrics dm = new DisplayMetrics();
+        DisplayMetrics dm = new DisplayMetrics();
         XYQActivity.instance().getWindowManager().getDefaultDisplay().getMetrics(dm);
-         this.dm = dm;
-         animations = new Animation[4];
-	}
+        this.dm = dm;
+        animations = new Animation[4];
+    }
 
-	public void onLoad() {
+    public void onLoad() {
         // 变更背景
         setBackground("assets/wzife/login/background.jpg");
 
@@ -51,7 +54,7 @@ public class TitleScreen extends Screen {
 
         // 创建一个开始按钮，按照宽191，高57分解按钮图，并设定其Click事件
         Animation btnAnim = SpriteFactory.loadAnimation("wzife/login/btn_login.tcp");
-        start = new LButton(btnAnim.getLImages(), "", btnAnim.getWidth(),btnAnim.getHeight(),0, 0) {
+        start = new LButton(btnAnim.getLImages(), "", btnAnim.getWidth(), btnAnim.getHeight(), 0, 0) {
             public void doClick() {
                 start.setEnabled(false);
                 XYQActivity.instance().setScreen(createNextScreen());
@@ -63,7 +66,7 @@ public class TitleScreen extends Screen {
 
         //退出按钮
         Animation exitAnim = SpriteFactory.loadAnimation("wzife/login/btn_exit.tcp");
-        end = new LButton(exitAnim.getLImages(), "", exitAnim.getWidth(),exitAnim.getHeight(),0, 0) {
+        end = new LButton(exitAnim.getLImages(), "", exitAnim.getWidth(), exitAnim.getHeight(), 0, 0) {
             public void doClick() {
                 LSystem.exit();
             }
@@ -80,10 +83,10 @@ public class TitleScreen extends Screen {
         animations[2] = SpriteFactory.loadAnimation("wzife/login/m3.tcp");
         animations[3] = SpriteFactory.loadAnimation("wzife/login/m4.tcp");
 
-	}
+    }
 
     private ScenarioScreen createNextScreen() {
-        return new ScenarioScreen(XYQActivity.instance(), "new", new ScreenCallback(){
+        return new ScenarioScreen(XYQActivity.instance(), "new", new ScreenCallback() {
             public void onExit(XYQActivity activity, Screen screen) {
                 activity.setScreen(SceneHandler.createSceneWz());
             }
@@ -91,12 +94,12 @@ public class TitleScreen extends Screen {
     }
 
     public void alter(LTimerContext c) {
-		// 初始化完毕
-		if (isOnLoadComplete()) {
+        // 初始化完毕
+        if (isOnLoadComplete()) {
             //动画
-            if(title != null){
+            if (title != null) {
                 // 标题未达到窗体中间
-                if (title.getScreenX() + title.getWidth()/2 <= getWidth()/2) {
+                if (title.getScreenX() + title.getWidth() / 2 <= getWidth() / 2) {
                     // 以三倍速移动（红色无角……）
                     title.move_right(5);
                     // 修正组件的实际坐标为移动坐标
@@ -108,10 +111,10 @@ public class TitleScreen extends Screen {
                     end.setEnabled(true);
                 }
             }
-		}
-	}
+        }
+    }
 
-	public void draw(LGraphics g) {
+    public void draw(LGraphics g) {
         //绘制游戏界面
         Canvas canvas = g.getCanvas();
         //int oldDensity = g.getCanvas().getDensity();
@@ -123,8 +126,8 @@ public class TitleScreen extends Screen {
         animPos[2] = new Point(180, 380);
         animPos[3] = new Point(432, 380);
 
-        for(int i=0;i<animations.length;i++){
-            if(animations[i] != null){
+        for (int i = 0; i < animations.length; i++) {
+            if (animations[i] != null) {
                 animations[i].draw(canvas, animPos[i].x, animPos[i].y);
             }
         }
@@ -133,7 +136,6 @@ public class TitleScreen extends Screen {
 //        animations[2].draw(canvas, 180, 380);
 //        animations[3].draw(canvas, 432, 380);
         //g.getCanvas().setDensity(oldDensity);
-
 
 
     }
@@ -147,15 +149,15 @@ public class TitleScreen extends Screen {
         int w = g.getCanvas().getWidth();
         int h = g.getCanvas().getHeight();
         int d = g.getCanvas().getDensity();
-        System.out.println("canvas: width: "+w+", height: "+h+", density: "+d+", dm: "+dm.densityDpi);
-        g.drawString("canvas: width: "+w+", height: "+h+", density: "+d+", dm: "+dm.densityDpi, 10, h-30);
+        System.out.println("canvas: width: " + w + ", height: " + h + ", density: " + d + ", dm: " + dm.densityDpi);
+        g.drawString("canvas: width: " + w + ", height: " + h + ", density: " + d + ", dm: " + dm.densityDpi, 10, h - 30);
     }
 
     @Override
     public void update(long elapsedTime) {
         super.update(elapsedTime);
-        for(int i=0;i<animations.length;i++) {
-            if(animations[i] != null){
+        for (int i = 0; i < animations.length; i++) {
+            if (animations[i] != null) {
                 animations[i].update(elapsedTime);
             }
         }
@@ -163,15 +165,15 @@ public class TitleScreen extends Screen {
 
     public void onTouchDown(LTouch e) {
 
-	}
+    }
 
-	public void onTouchMove(LTouch e) {
+    public void onTouchMove(LTouch e) {
 
-	}
+    }
 
-	public void onTouchUp(LTouch e) {
+    public void onTouchUp(LTouch e) {
 
-	}
+    }
 
     @Override
     public LTransition onTransition() {
@@ -181,9 +183,9 @@ public class TitleScreen extends Screen {
     @Override
     public void dispose() {
         super.dispose();
-        if(animations != null){
-            for(int i=0;i<animations.length;i++){
-                if(animations[i] != null){
+        if (animations != null) {
+            for (int i = 0; i < animations.length; i++) {
+                if (animations[i] != null) {
                     animations[i].dispose();
                 }
             }
@@ -196,7 +198,6 @@ public class TitleScreen extends Screen {
 //        end = null;
 //        title = null;
     }
-
 
 
 }

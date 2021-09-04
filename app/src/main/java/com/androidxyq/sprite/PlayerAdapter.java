@@ -4,13 +4,13 @@ import android.graphics.Point;
 
 /**
  * PlayerListener的适配器
- * 
+ *
  * @author 龚德伟
  * @history 2008-6-15 龚德伟 新建
  */
 public class PlayerAdapter implements PlayerListener {
 
-	
+
 //	protected Context context;
 //	protected DataManager dataManager;
 //	protected ScriptEngine scriptEngine;
@@ -43,7 +43,7 @@ public class PlayerAdapter implements PlayerListener {
 //		application.doTalk(p, chat);
 //	}
 
-	public void move(Player player, Point increment) {
+    public void move(Player player, Point increment) {
     }
 
     public void stepOver(Player player) {
@@ -64,6 +64,6 @@ public class PlayerAdapter implements PlayerListener {
     public void talk(PlayerEvent evt) {
     }
 
-	public void walk(PlayerEvent evt) {
-	}
+    public void walk(PlayerEvent evt) {
+    }
 }

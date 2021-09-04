@@ -2,13 +2,8 @@ package com.androidxyq.graph;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.util.DisplayMetrics;
 
-import java.lang.ref.SoftReference;
-
-public class TCPFrame implements Frame{
+public class TCPFrame implements Frame {
 
     /**
      * 动画播放每帧的间隔(ms)
@@ -53,8 +48,8 @@ public class TCPFrame implements Frame{
         this.delay = delay;
     }
 
-    public boolean isRawFrame(){
-        return image==null && pixels!=null;
+    public boolean isRawFrame() {
+        return image == null && pixels != null;
     }
 
     public void dispose() {
@@ -71,7 +66,7 @@ public class TCPFrame implements Frame{
     }
 
     public int getDuration() {
-        return delay *  ANIMATION_INTERVAL;
+        return delay * ANIMATION_INTERVAL;
     }
 
     public int getDelay() {

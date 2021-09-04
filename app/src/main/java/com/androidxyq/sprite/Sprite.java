@@ -1,7 +1,7 @@
 /*
- * JavaXYQ Engine 
- * 
- * javaxyq@2008 all rights. 
+ * JavaXYQ Engine
+ *
+ * javaxyq@2008 all rights.
  * http://www.javaxyq.com
  */
 
@@ -9,42 +9,33 @@ package com.androidxyq.sprite;
 
 
 import android.graphics.Canvas;
+
 import com.androidxyq.graph.AbstractWidget;
 import com.androidxyq.graph.Animation;
 import com.androidxyq.graph.SpriteFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
 /**
  * 精灵
+ *
  * @author gongdewei
  * @history 2008-5-29 gongdewei 新建
  */
 public class Sprite extends AbstractWidget {
 
-    private static final long serialVersionUID = -4953815363295255637L;
-
     public static final int DIR_DOWN = 0x4;
-
     public static final int DIR_DOWN_LEFT = 0x1;
-
     public static final int DIR_DOWN_RIGHT = 0x0;
-
     public static final int DIR_LEFT = 0x5;
-
     public static final int DIR_RIGHT = 0x7;
-
     public static final int DIR_UP = 0x6;
-
     public static final int DIR_UP_LEFT = 0x2;
-
     public static final int DIR_UP_RIGHT = 0x3;
-
+    private static final long serialVersionUID = -4953815363295255637L;
     private Animation[] animations;
 
-    /** 精灵着色 */
+    /**
+     * 精灵着色
+     */
     private int[] colorations;
 
     // 当前是第几个动画（哪个方向）
@@ -52,7 +43,9 @@ public class Sprite extends AbstractWidget {
 
     private String resName;
 
-    /** 自动(循环)播放 */
+    /**
+     * 自动(循环)播放
+     */
     private boolean autoPlay = true;
 
     private int repeat = -1;
@@ -62,7 +55,7 @@ public class Sprite extends AbstractWidget {
         this.resName = resName;
         this.animCount = animCount;
         this.animations = new Animation[animCount];
-        this.colorations = new int[]{0,0,0};
+        this.colorations = new int[]{0, 0, 0};
     }
 
     public Sprite(Sprite sprite) {
@@ -72,9 +65,9 @@ public class Sprite extends AbstractWidget {
         this.direction = sprite.direction;
         //复制动画对象
         this.animations = new Animation[animCount];
-        for(int i=0;i<animCount;i++){
+        for (int i = 0; i < animCount; i++) {
             Animation anim = sprite.getAnimation(i);
-            if(anim != null){
+            if (anim != null) {
                 this.animations[i] = anim.clone();
             }
         }
@@ -107,13 +100,14 @@ public class Sprite extends AbstractWidget {
     public int getAnimationCount() {
         return animCount;
     }
-    
-    public int getAnimationIndex(){
+
+    public int getAnimationIndex() {
         return this.direction;
     }
 
     /**
      * 当前的动画
+     *
      * @return
      */
     public Animation getAnimation() {
@@ -136,12 +130,31 @@ public class Sprite extends AbstractWidget {
         return direction;
     }
 
+    public synchronized void setDirection(int index) {
+        index %= animCount;
+        this.direction = index;
+        //确保资源已经加载
+        SpriteFactory.resolveSprite(this);
+        this.getAnimation().setRepeat(this.repeat);
+        this.resetFrames();
+    }
+
     public int getRepeat() {
         return getAnimation().getRepeat();
     }
 
+    public void setRepeat(int repeat) {
+        getAnimation().setRepeat(repeat);
+        this.repeat = repeat;
+    }
+
     public boolean isAutoPlay() {
         return autoPlay;
+    }
+
+    public void setAutoPlay(boolean autoPlay) {
+        this.autoPlay = autoPlay;
+        this.setRepeat(autoPlay ? -1 : 1);
     }
 
     public void reset() {
@@ -153,30 +166,10 @@ public class Sprite extends AbstractWidget {
         try {
             this.getAnimation().setIndex(0);
         } catch (Exception e) {
-            System.err.println("resetFrames index: "+this.getDirection()+", count:"+this.getAnimationCount()+", error: "+e.getMessage());
+            System.err.println("resetFrames index: " + this.getDirection() + ", count:" + this.getAnimationCount() + ", error: " + e.getMessage());
             //e.printStackTrace();
         }
     }
-
-    public void setAutoPlay(boolean autoPlay) {
-        this.autoPlay = autoPlay;
-        this.setRepeat(autoPlay ? -1 : 1);
-    }
-
-    public synchronized void setDirection(int index) {
-        index %= animCount;
-        this.direction = index;
-        //确保资源已经加载
-        SpriteFactory.resolveSprite(this);
-        this.getAnimation().setRepeat(this.repeat);
-        this.resetFrames();
-    }
-
-    public void setRepeat(int repeat) {
-        getAnimation().setRepeat(repeat);
-        this.repeat = repeat;
-    }
-
 
     public void update(long elapsedTime) {
         // update animation
@@ -194,7 +187,7 @@ public class Sprite extends AbstractWidget {
 
     @Override
     public int getWidth() {
-        if(getAnimation() != null){
+        if (getAnimation() != null) {
             return getAnimation().getWidth();
         }
         return super.getWidth();
@@ -202,7 +195,7 @@ public class Sprite extends AbstractWidget {
 
     @Override
     public int getHeight() {
-        if(getAnimation() != null){
+        if (getAnimation() != null) {
             return getAnimation().getHeight();
         }
         return super.getHeight();

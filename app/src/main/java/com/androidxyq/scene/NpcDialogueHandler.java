@@ -11,19 +11,22 @@ public interface NpcDialogueHandler {
 
     /**
      * 判断是否支持某个场景
-     * @param sceneId  场景id
+     *
+     * @param sceneId 场景id
      * @return
      */
     boolean support(String sceneId, String npcName);
 
     /**
      * 获取NPC的对话内容
+     *
      * @return
      */
     String[] getChoices(String sceneId, String npcName);
 
     /**
      * 用户选择后触发此方法
+     *
      * @param scene
      * @param npcName
      * @param choiceIndex

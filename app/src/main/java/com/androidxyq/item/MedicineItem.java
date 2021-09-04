@@ -5,13 +5,11 @@
 
 package com.androidxyq.item;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- *  药品
+ * 药品
+ *
  * @author Administrator
  */
 public class MedicineItem implements Item, Serializable {
@@ -160,14 +158,16 @@ public class MedicineItem implements Item, Serializable {
     public String actualEfficacy() {
         boolean first = true;
         StringBuilder buf = new StringBuilder(32);
-        if(hp != 0) {
+        if (hp != 0) {
             buf.append("恢复气血");
             buf.append(hp);
             buf.append("点");
             first = false;
         }
-        if(mp != 0) {
-            if(!first)buf.append("，");
+        if (mp != 0) {
+            if (!first) {
+                buf.append("，");
+            }
             buf.append("恢复法力");
             buf.append(mp);
             buf.append("点");
@@ -180,8 +180,10 @@ public class MedicineItem implements Item, Serializable {
 //			buf.append("点");
 //			first = false;
 //		}
-        if(injury != 0) {//治疗伤势
-            if(!first)buf.append("，");
+        if (injury != 0) {//治疗伤势
+            if (!first) {
+                buf.append("，");
+            }
             buf.append("治疗伤势");
             buf.append(injury);
             buf.append("点");

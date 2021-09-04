@@ -3,6 +3,7 @@ package com.androidxyq.graph;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
 import org.loon.framework.android.game.core.graphics.LImage;
 
 import java.util.ArrayList;
@@ -141,24 +142,26 @@ public class Animation extends AbstractWidget {
         return frames;
     }
 
-    public Bitmap[] getImages(){
+    public Bitmap[] getImages() {
         Bitmap[] images = new Bitmap[this.getFrameCount()];
-        for(int i=0;i<this.getFrameCount();i++){
+        for (int i = 0; i < this.getFrameCount(); i++) {
             images[i] = this.getFrame(i).getImage();
         }
         return images;
     }
 
-    public LImage[] getLImages(){
+    public LImage[] getLImages() {
         LImage[] images = new LImage[this.getFrameCount()];
-        for(int i=0;i<this.getFrameCount();i++){
+        for (int i = 0; i < this.getFrameCount(); i++) {
             images[i] = new LImage(this.getFrame(i).getImage());
         }
         return images;
     }
 
-    public Frame getFrame(int index){
-        if(index >= frames.size())return null;
+    public Frame getFrame(int index) {
+        if (index >= frames.size()) {
+            return null;
+        }
         return frames.elementAt(index);
     }
 
@@ -247,7 +250,7 @@ public class Animation extends AbstractWidget {
     public void waitFor() {
         synchronized (UPDATE_LOCK) {
             while (true) {
-                if(repeat==0 && index == frameCount-1 || repeat ==-1) {
+                if (repeat == 0 && index == frameCount - 1 || repeat == -1) {
                     break;
                 }
                 try {
@@ -259,7 +262,7 @@ public class Animation extends AbstractWidget {
         }
     }
 
-    public boolean isFinished(){
-        return repeat==0;
+    public boolean isFinished() {
+        return repeat == 0;
     }
 }

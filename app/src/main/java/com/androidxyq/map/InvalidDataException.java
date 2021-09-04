@@ -1,7 +1,7 @@
 /*
- * JavaXYQ Engine 
- * 
- * javaxyq@2008 all rights. 
+ * JavaXYQ Engine
+ *
+ * javaxyq@2008 all rights.
  * http://www.javaxyq.com
  */
 

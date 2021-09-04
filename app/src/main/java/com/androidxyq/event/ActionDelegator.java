@@ -16,14 +16,14 @@ public class ActionDelegator {
         new ActionWorker(taskQueue).start();
     }
 
-    public void publish(Runnable task){
-        synchronized (taskQueue){
+    public void publish(Runnable task) {
+        synchronized (taskQueue) {
             taskQueue.add(task);
             taskQueue.notifyAll();
         }
     }
-    
-    private static class ActionWorker extends Thread{
+
+    private static class ActionWorker extends Thread {
         private Vector<Runnable> taskQueue;
 
         private ActionWorker(Vector<Runnable> taskQueue) {
@@ -31,13 +31,14 @@ public class ActionDelegator {
             setDaemon(true);
             this.taskQueue = taskQueue;
         }
+
         public void run() {
-            while(true){
-                if(!taskQueue.isEmpty()){
+            while (true) {
+                if (!taskQueue.isEmpty()) {
                     Runnable task = taskQueue.remove(taskQueue.size() - 1);
                     task.run();
-                }else {
-                    synchronized (taskQueue){
+                } else {
+                    synchronized (taskQueue) {
                         try {
                             taskQueue.wait();
                         } catch (InterruptedException e) {

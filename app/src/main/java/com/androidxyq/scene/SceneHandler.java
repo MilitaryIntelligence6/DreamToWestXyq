@@ -1,6 +1,7 @@
 package com.androidxyq.scene;
 
 import android.graphics.Point;
+
 import com.androidxyq.data.DataHelper;
 import com.androidxyq.sprite.PlayerStatus;
 
@@ -26,10 +27,11 @@ public class SceneHandler {
 
     /**
      * 创建乾坤殿场景
+     *
      * @return
      */
     public static SceneScreen createSceneQkd() {
-        if(qkdScene != null){
+        if (qkdScene != null) {
             return qkdScene;
         }
         PlayerStatus hero = DataHelper.getHeroStatus();
@@ -41,7 +43,7 @@ public class SceneHandler {
         npc1Status.setSceneLocation(new Point(22, 12));
         List<PlayerStatus> npclist = new ArrayList<PlayerStatus>();
         npclist.add(npc1Status);
-        SceneScreen sceneScreen =  new SceneScreen("1147","乾坤殿",hero, npclist);
+        SceneScreen sceneScreen = new SceneScreen("1147", "乾坤殿", hero, npclist);
         //这里添加多个场景的NPC对话处理类
         sceneScreen.addNpcHandler(npcHandler);
         qkdScene = sceneScreen;
@@ -50,10 +52,11 @@ public class SceneHandler {
 
     /**
      * 创建五庄观场景
+     *
      * @return
      */
     public static SceneScreen createSceneWz() {
-        if(wzScene != null){
+        if (wzScene != null) {
             return wzScene;
         }
         PlayerStatus hero = DataHelper.getHeroStatus();
@@ -62,7 +65,7 @@ public class SceneHandler {
         npc1Status.setCharacter("3044");
         npc1Status.setName("明月");
         npc1Status.setDirection(1);
-        npc1Status.setSceneLocation(new Point(61,32));
+        npc1Status.setSceneLocation(new Point(61, 32));
         List<PlayerStatus> npclist = new ArrayList<PlayerStatus>();
         npclist.add(npc1Status);
         SceneScreen sceneScreen = new SceneScreen("1146", "五庄观", hero, npclist);
@@ -71,7 +74,6 @@ public class SceneHandler {
         wzScene = sceneScreen;
         return sceneScreen;
     }
-
 
 
 }

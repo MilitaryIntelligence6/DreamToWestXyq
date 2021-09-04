@@ -1,14 +1,13 @@
 /*
- * JavaXYQ Engine 
- * 
- * javaxyq@2008 all rights. 
+ * JavaXYQ Engine
+ *
+ * javaxyq@2008 all rights.
  * http://www.javaxyq.com
  */
 
 package com.androidxyq.graph;
 
 import android.graphics.Canvas;
-import android.graphics.Rect;
 
 import java.io.Serializable;
 

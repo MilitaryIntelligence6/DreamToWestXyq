@@ -1,6 +1,10 @@
 package com.androidxyq.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,16 +23,16 @@ public class Toolkit {
                     filename = filename.substring(1);
                 }
                 File file = new File(filename);
-                if(file.exists()) {
+                if (file.exists()) {
                     is = new FileInputStream(filename);
-                //}else {
-                //    is = CacheManager.getInstance().getResourceAsStream(filename);
+                    //}else {
+                    //    is = CacheManager.getInstance().getResourceAsStream(filename);
                 }
             } catch (FileNotFoundException e) {
-                System.out.println("找不到文件: "+filename);
+                System.out.println("找不到文件: " + filename);
                 //e.printStackTrace();
             } catch (IOException e) {
-                System.out.println("找不到文件: "+filename);
+                System.out.println("找不到文件: " + filename);
                 e.printStackTrace();
             }
         }

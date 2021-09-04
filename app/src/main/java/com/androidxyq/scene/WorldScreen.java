@@ -1,6 +1,7 @@
 package com.androidxyq.scene;
 
 import com.androidxyq.XYQActivity;
+
 import org.loon.framework.android.game.core.LTransition;
 import org.loon.framework.android.game.core.graphics.Screen;
 import org.loon.framework.android.game.core.graphics.device.LGraphics;
@@ -12,7 +13,7 @@ import org.loon.framework.android.game.core.timer.LTimerContext;
  * Date: 12-3-18
  * Time: 下午7:12
  */
-public class WorldScreen extends Screen{
+public class WorldScreen extends Screen {
 
     private XYQActivity activity;
 
@@ -44,6 +45,7 @@ public class WorldScreen extends Screen{
     public void onTouchMove(LTouch e) {
 
     }
+
     @Override
     public LTransition onTransition() {
         //return LTransition.newFadeIn();

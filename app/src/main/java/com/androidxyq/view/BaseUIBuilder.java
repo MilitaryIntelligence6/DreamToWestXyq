@@ -1,6 +1,7 @@
 package com.androidxyq.view;
 
 import android.graphics.Bitmap;
+
 import org.loon.framework.android.game.core.LSystem;
 import org.loon.framework.android.game.core.graphics.LColor;
 import org.loon.framework.android.game.core.graphics.LGradation;
@@ -14,7 +15,7 @@ import org.loon.framework.android.game.core.graphics.device.LGraphics;
  * Date: 12-6-4
  * Time: 下午11:18
  */
-public abstract class BaseUIBuilder implements UIBuilder{
+public abstract class BaseUIBuilder implements UIBuilder {
     /**
      * 创建默认的选择器背景图片
      *

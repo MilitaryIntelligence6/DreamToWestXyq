@@ -1,7 +1,12 @@
 package com.androidxyq.battle;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
+
 import com.androidxyq.XYQActivity;
 import com.androidxyq.event.ActionDelegator;
 import com.androidxyq.graph.Animation;
@@ -12,12 +17,18 @@ import com.androidxyq.sprite.PlayerStatus;
 import com.androidxyq.sprite.Sprite;
 import com.androidxyq.view.Label;
 import com.androidxyq.view.UIHelper;
+
 import org.loon.framework.android.game.core.LTransition;
 import org.loon.framework.android.game.core.graphics.Screen;
 import org.loon.framework.android.game.core.graphics.device.LGraphics;
 import org.loon.framework.android.game.core.timer.LTimerContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * 游戏战斗场景界面
@@ -25,7 +36,7 @@ import java.util.*;
  * Date: 12-3-18
  * Time: 下午7:12
  */
-public class BattleScreen extends Screen{
+public class BattleScreen extends Screen {
 
     public static final String BATTLE_ROLE_CMD = "battle_role_cmd";
     public static final String BATTLE_WARMAGIC10 = "battle_warmagic10";
@@ -47,13 +58,19 @@ public class BattleScreen extends Screen{
     private Player hero;
     //当前目标角色
     private Player targetRole;
-    /**后退躲避的角色*/
+    /**
+     * 后退躲避的角色
+     */
     private Player backingRole;
     //是否正在选择目标
     private boolean selectingTarget;
-    /** 战斗指令处理器*/
+    /**
+     * 战斗指令处理器
+     */
     private CommandController cmdController;
-    /** 当前选择的法术id */
+    /**
+     * 当前选择的法术id
+     */
     private String selectedMagic;
     //是否正在选择物品
     private boolean selectingItem;
@@ -81,6 +98,11 @@ public class BattleScreen extends Screen{
     private Animation greenNumAnim;
     private Animation redNumAnim;
     private Bitmap battlebg;
+    private int targetX, targetY;
+    private int originX, originY;
+    private Player movingPlayer;
+    private Animation indicatorAnim;
+    private boolean waitingCmd;
 
     public BattleScreen(Bitmap bgImage, List<Player> ownsideTeam, List<Player> adversaryTeam) {
         this.battlebg = createBattleBG(bgImage);
@@ -95,12 +117,12 @@ public class BattleScreen extends Screen{
         //TODO 修正大分辨率下的异常问题
         Canvas canvas = null;
         Bitmap background = bgImage;
-        if(!bgImage.isMutable()){
+        if (!bgImage.isMutable()) {
             background = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
         }
         canvas = new Canvas(background);
-        if(!bgImage.isMutable()){
-            System.err.println("bgImage: width:"+bgImage.getWidth()+", height:"+bgImage.getHeight()+", Density:"+bgImage.getDensity());
+        if (!bgImage.isMutable()) {
+            System.err.println("bgImage: width:" + bgImage.getWidth() + ", height:" + bgImage.getHeight() + ", Density:" + bgImage.getDensity());
             canvas.drawBitmap(bgImage, 0, 0, null);
         }
         //叠加战斗背景图案
@@ -113,14 +135,14 @@ public class BattleScreen extends Screen{
 
         canvas.save(Canvas.ALL_SAVE_FLAG);
         canvas.restore();
-        if(!bgImage.isMutable()){
+        if (!bgImage.isMutable()) {
             bgImage.recycle();
         }
         battleMask.recycle();
         return background;
     }
 
-    public void onLoad(){
+    public void onLoad() {
         //掉血和加血的数字
         greenNumAnim = SpriteFactory.loadAnimation("assets/misc/green_num.tcp");
         redNumAnim = SpriteFactory.loadAnimation("assets/misc/red_num.tcp");
@@ -130,7 +152,7 @@ public class BattleScreen extends Screen{
         this.setHero(ownsideTeam.get(cmdIndex));
         waitingCmd = true;
 
-        lblMsg = new Label("战斗开始",140,400,400,30);
+        lblMsg = new Label("战斗开始", 140, 400, 400, 30);
         add(lblMsg);
         UIHelper.showDialog(this, BATTLE_ROLE_CMD);
         XYQActivity.playSound("music/2003.mp3");
@@ -148,14 +170,14 @@ public class BattleScreen extends Screen{
         });
     }
 
-    public void update( long elapsedTime){
+    public void update(long elapsedTime) {
         //System.out.println("thread: "+Thread.currentThread().getId()+"  update:"+elapsedTime);
         updateRole(elapsedTime);
         updateIndicator(elapsedTime);
     }
 
     private void updateRole(long elapsedTime) {
-        for(int i =0;i< roles.size();i++){
+        for (int i = 0; i < roles.size(); i++) {
             roles.get(i).update(elapsedTime);
         }
     }
@@ -183,7 +205,7 @@ public class BattleScreen extends Screen{
             //绘制伤害点数
             drawPoints(g);
 
-            if(XYQActivity.isDebug()){
+            if (XYQActivity.isDebug()) {
                 drawDebug(g);
             }
         } catch (Exception e) {
@@ -194,7 +216,7 @@ public class BattleScreen extends Screen{
 
     protected void drawRole(LGraphics g) {
         try {
-            for(int i=0;i< roles.size();i++){
+            for (int i = 0; i < roles.size(); i++) {
                 Player npc = roles.get(i);
                 Point p = npc.getLocation();
                 npc.draw(g.getCanvas(), p.x, p.y);
@@ -220,8 +242,9 @@ public class BattleScreen extends Screen{
     }
 
     private void drawHpSlot(LGraphics g) {
-        if (!ranked)
+        if (!ranked) {
             return;
+        }
         if (slotAnim == null) {
             slotAnim = SpriteFactory.loadAnimation("assets/addon/hpslot.tcp");
             emptyslotAnim = SpriteFactory.loadAnimation("assets/addon/emptyslot.tcp");
@@ -282,6 +305,19 @@ public class BattleScreen extends Screen{
         g.getCanvas().drawText("canvas: width: " + w + ", height: " + h + ", density: " + d + ", dm: " + dm.densityDpi, 20, h - 30, paint);
     }
 
+//    public void mouseEntered(MouseEvent e) {
+//        setGameCursor(selectingTarget ? Cursor.SELECT_CURSOR : Cursor.ATTACK_CURSOR);
+//    }
+//
+//    public void mouseExited(MouseEvent e) {
+//        setGameCursor(Cursor.DEFAULT_CURSOR);
+//    }
+//
+//    public void mouseMoved(MouseEvent e) {
+//        setGameCursor(selectingTarget ? Cursor.SELECT_CURSOR : Cursor.ATTACK_CURSOR);
+//    }
+//========================================================//
+
     @Override
     public void alter(LTimerContext timer) {
 
@@ -310,8 +346,8 @@ public class BattleScreen extends Screen{
                 }
             }
         }
-        if(clickPlayer != null){
-            System.err.println("选中的角色："+clickPlayer.getName()+", ("+clickPlayer.getX()+","+clickPlayer.getY()+")");
+        if (clickPlayer != null) {
+            System.err.println("选中的角色：" + clickPlayer.getName() + ", (" + clickPlayer.getX() + "," + clickPlayer.getY() + ")");
         }
         if (waitingCmd && clickPlayer != null) {
             targetRole = clickPlayer;
@@ -349,55 +385,31 @@ public class BattleScreen extends Screen{
         return LTransition.newCrossRandom();
     }
 
-//    public void mouseEntered(MouseEvent e) {
-//        setGameCursor(selectingTarget ? Cursor.SELECT_CURSOR : Cursor.ATTACK_CURSOR);
-//    }
-//
-//    public void mouseExited(MouseEvent e) {
-//        setGameCursor(Cursor.DEFAULT_CURSOR);
-//    }
-//
-//    public void mouseMoved(MouseEvent e) {
-//        setGameCursor(selectingTarget ? Cursor.SELECT_CURSOR : Cursor.ATTACK_CURSOR);
-//    }
-//========================================================//
     /**
      * 添加一个NPC到队列中
+     *
      * @param npc
      */
-    protected void addRole(Player npc){
+    protected void addRole(Player npc) {
         npc.stop(true);
         roles.add(npc);
     }
-    
-    protected void removeRole(Player npc){
+
+    protected void removeRole(Player npc) {
         roles.remove(npc);
     }
 
-    protected Player getHero(){
+    protected Player getHero() {
         return this.hero;
     }
 
-    /**
-     * 设置敌方队伍
-     *
-     * @param team
-     */
-    public void setAdversaryTeam(List<Player> team) {
-        this.adversaryTeam = team;
-    }
-
-    /**
-     * 设置我方队伍
-     *
-     * @param team
-     */
-    public void setOwnsideTeam(List<Player> team) {
-        this.ownsideTeam = team;
+    public void setHero(Player hero) {
+        this.hero = hero;
     }
 
     /**
      * 将人物或npc移出战斗队伍
+     *
      * @param p
      */
     public void removePlayerFromTeam(Player p) {
@@ -474,14 +486,14 @@ public class BattleScreen extends Screen{
     }
 
     public void defendCmd() {
-        System.err.println("thread:"+Thread.currentThread().getId()+"  BattleScreen: defendCmd  ");
+        System.err.println("thread:" + Thread.currentThread().getId() + "  BattleScreen: defendCmd  ");
         Player cmdPlayer = ownsideTeam.get(cmdIndex);
         Command cmd = new Command("defend", cmdPlayer, null);
         addCmd(cmd);
     }
 
     public void runawayCmd() {
-        System.err.println("thread:"+Thread.currentThread().getId()+"  BattleScreen: runawayCmd  ");
+        System.err.println("thread:" + Thread.currentThread().getId() + "  BattleScreen: runawayCmd  ");
         Player cmdPlayer = ownsideTeam.get(cmdIndex);
         Command cmd = new Command("runaway", cmdPlayer, null);
         addCmd(cmd);
@@ -491,7 +503,7 @@ public class BattleScreen extends Screen{
      * 发送攻击命令
      */
     public void attackCmd() {
-        System.err.println("thread:"+Thread.currentThread().getId()+"  BattleScreen: attackCmd  ");
+        System.err.println("thread:" + Thread.currentThread().getId() + "  BattleScreen: attackCmd  ");
         if (targetRole == null) {
             targetRole = randomEnemy();
         }
@@ -504,7 +516,7 @@ public class BattleScreen extends Screen{
      * 发送法术攻击命令
      */
     public void magicCmd() {
-        System.err.println("thread:"+Thread.currentThread().getId()+"  BattleScreen: magicCmd  ");
+        System.err.println("thread:" + Thread.currentThread().getId() + "  BattleScreen: magicCmd  ");
         if (targetRole == null) {
             targetRole = randomEnemy();
         }
@@ -542,7 +554,7 @@ public class BattleScreen extends Screen{
         this.targetY = y;
         this.originX = player.getX();
         this.originY = player.getY();
-        System.err.println("rush: ("+originX+","+originY+") => ("+targetX+","+targetY+")");
+        System.err.println("rush: (" + originX + "," + originY + ") => (" + targetX + "," + targetY + ")");
         this.movingPlayer = player;
         player.setState("rusha");
         long lastTime = System.currentTimeMillis();
@@ -594,12 +606,6 @@ public class BattleScreen extends Screen{
         this.backingRole = player;
         new BackwardThread().start();
     }
-
-    private int targetX, targetY;
-    private int originX, originY;
-    private Player movingPlayer;
-    private Animation indicatorAnim;
-    private boolean waitingCmd;
 
     private void updateMovement(long elapsedTime) {
         int dx = 0, dy = 0;
@@ -754,8 +760,26 @@ public class BattleScreen extends Screen{
         return ownsideTeam;
     }
 
+    /**
+     * 设置我方队伍
+     *
+     * @param team
+     */
+    public void setOwnsideTeam(List<Player> team) {
+        this.ownsideTeam = team;
+    }
+
     protected List<Player> getAdversaryTeam() {
         return adversaryTeam;
+    }
+
+    /**
+     * 设置敌方队伍
+     *
+     * @param team
+     */
+    public void setAdversaryTeam(List<Player> team) {
+        this.adversaryTeam = team;
     }
 
     public void setMsg(String text) {
@@ -763,7 +787,7 @@ public class BattleScreen extends Screen{
     }
 
     public void addCmd(Command cmd) {
-        System.err.println("thread:"+Thread.currentThread().getId()+"  战斗指令："+cmd);
+        System.err.println("thread:" + Thread.currentThread().getId() + "  战斗指令：" + cmd);
         cmdController.addCmd(cmd);
         lastCmd = cmd;
         if (cmdIndex >= ownsideTeam.size() - 1) {
@@ -783,7 +807,7 @@ public class BattleScreen extends Screen{
         UIHelper.hideDialog(this, BATTLE_ROLE_CMD);
         eventDelegator.publish(new Runnable() {
             public void run() {
-                System.err.println("thread:"+Thread.currentThread().getId()+"  start battle");
+                System.err.println("thread:" + Thread.currentThread().getId() + "  start battle");
                 cmdController.turnBattle();
                 System.err.println("thread:" + Thread.currentThread().getId() + "  end battle");
             }
@@ -800,19 +824,18 @@ public class BattleScreen extends Screen{
         waitingCmd = true;
     }
 
-    public void setHero(Player hero) {
-        this.hero = hero;
-    }
-
     /**
      * 最近一次施放的法术
+     *
      * @return the lastMagic
      */
     public String getLastMagic() {
         return lastMagic;
     }
+
     /**
      * set value of lastMagic
+     *
      * @param lastMagic
      */
     public void setLastMagic(String lastMagic) {
@@ -822,8 +845,10 @@ public class BattleScreen extends Screen{
     protected String getMusic() {
         return "music/2003.mp3";
     }
+
     /**
      * 清除角色（死亡或逃跑等）
+     *
      * @param role
      */
     public void cleanRole(Player role) {
@@ -839,11 +864,59 @@ public class BattleScreen extends Screen{
 
     public void runaway(Player player, boolean success) {
         try {
-            RunawayWorker worker = new RunawayWorker(player,success, 2000);
+            RunawayWorker worker = new RunawayWorker(player, success, 2000);
             worker.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setBattleListener(BattleListener listener) {
+        battleListener = listener;
+    }
+
+    public void removeBattleListener() {
+        battleListener = null;
+    }
+
+    protected void handleBattleEvent(BattleEvent evt) {
+        //ApplicationHelper.getApplication().doAction(this, Actions.QUIT_BATTLE);
+        if (battleListener != null) {
+            switch (evt.getId()) {
+                case BattleEvent.BATTLE_WIN:
+                    battleListener.battleWin(evt);
+                    break;
+                case BattleEvent.BATTLE_DEFEATED:
+                    battleListener.battleDefeated(evt);
+                    break;
+                case BattleEvent.BATTLE_TIMEOUT:
+                    battleListener.battleTimeout(evt);
+                    break;
+                case BattleEvent.BATTLE_BREAK:
+                    battleListener.battleBreak(evt);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        this.roles.clear();
+        this.redNumAnim = null;
+        this.greenNumAnim = null;
+        this.selectedItem = null;
+        this.adversaryTeam.clear();
+        this.ownsideTeam.clear();
+        this.backingRole = null;
+        this.battlebg = null;
+        this.cmdController = null;
+        this.emptyslotAnim = null;
+        this.hero = null;
+        this.indicatorAnim = null;
+        this.movingPlayer = null;
+        this.slotAnim = null;
+        this.targetRole = null;
     }
 
     private class BackwardThread extends Thread {
@@ -891,7 +964,7 @@ public class BattleScreen extends Screen{
         private Player player;
         private long duration;
 
-        public FadeOutWorker(Player player,long duration) {
+        public FadeOutWorker(Player player, long duration) {
             this.player = player;
             this.duration = duration;
         }
@@ -918,13 +991,14 @@ public class BattleScreen extends Screen{
             }
             removePlayerFromTeam(player);
             player.setAlpha(1.0f);
-            System.out.println("将"+player.getName()+"移出队伍。");
+            System.out.println("将" + player.getName() + "移出队伍。");
         }
     }
 
     private class BlinkWorker {
         private Player player;
         private long duration;
+
         public BlinkWorker(Player player, long duration) {
             super();
             this.player = player;
@@ -933,7 +1007,7 @@ public class BattleScreen extends Screen{
 
         public void execute() throws Exception {
             long minShow = 50;
-            long interval = (this.duration - minShow*2)/2;
+            long interval = (this.duration - minShow * 2) / 2;
             try {
                 this.player.setAlpha(0);
                 Thread.sleep(interval);
@@ -945,7 +1019,7 @@ public class BattleScreen extends Screen{
                 Thread.sleep(minShow);
             } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 this.player.setAlpha(1.0f);
             }
         }
@@ -955,6 +1029,7 @@ public class BattleScreen extends Screen{
         private Player player;
         private long duration;
         private boolean success;
+
         public RunawayWorker(Player player, boolean success, long duration) {
             super();
             this.player = player;
@@ -964,23 +1039,23 @@ public class BattleScreen extends Screen{
 
         public void execute() throws Exception {
             //转身
-            int dir =  player.getDirection();
-            player.setDirection(dir-2);
+            int dir = player.getDirection();
+            player.setDirection(dir - 2);
             //切换到rush
             player.setState("rusha");
             Thread.sleep(500);
-            if(this.success) {
+            if (this.success) {
                 XYQActivity.playEffectSound("assets/sound/addon/escape_ok.mp3");
                 long interval = 50;
                 long t = 0;
-                while(t<duration) {
+                while (t < duration) {
                     Thread.sleep(interval);
                     // 计算移动量
                     long elapsedTime = interval;
-                    int distance = (int) (2* XYQActivity.NORMAL_SPEED * elapsedTime);
+                    int distance = (int) (2 * XYQActivity.NORMAL_SPEED * elapsedTime);
                     int dx = distance; //向右下逃跑
                     int dy = distance;
-                    if(player.getDirection() == Sprite.DIR_UP_LEFT) {//向左上逃跑
+                    if (player.getDirection() == Sprite.DIR_UP_LEFT) {//向左上逃跑
                         dx = -dx;
                         dy = -dy;
                     }
@@ -990,67 +1065,19 @@ public class BattleScreen extends Screen{
                     //如果移出场景则终止动画
                     int halfWidth = player.getWidth() / 2;
                     int halfHeight = player.getHeight() / 2;
-                    if(player.getX()+ halfWidth <0 || player.getY()+ halfHeight < 0 || player.getX()-halfWidth>BattleScreen.this.getWidth()
-                            ||player.getY()-halfHeight > BattleScreen.this.getHeight()) {
+                    if (player.getX() + halfWidth < 0 || player.getY() + halfHeight < 0 || player.getX() - halfWidth > BattleScreen.this.getWidth()
+                            || player.getY() - halfHeight > BattleScreen.this.getHeight()) {
                         removePlayerFromTeam(player);
                         player.setState(Player.STATE_STAND);
                         break;
                     }
                 }
-            }else {
-                UIHelper.prompt(BattleScreen.this, "运气不济，逃跑失败！#83",3000);
+            } else {
+                UIHelper.prompt(BattleScreen.this, "运气不济，逃跑失败！#83", 3000);
                 player.setState(Player.STATE_STAND);
                 player.setDirection(dir);
             }
         }
 
-    }
-
-    public void setBattleListener(BattleListener listener) {
-        battleListener =  listener;
-    }
-
-    public void removeBattleListener() {
-        battleListener = null;
-    }
-
-    protected void handleBattleEvent(BattleEvent evt) {
-        //ApplicationHelper.getApplication().doAction(this, Actions.QUIT_BATTLE);
-        if(battleListener != null){
-            switch (evt.getId()) {
-                case BattleEvent.BATTLE_WIN:
-                    battleListener.battleWin(evt);
-                    break;
-                case BattleEvent.BATTLE_DEFEATED:
-                    battleListener.battleDefeated(evt);
-                    break;
-                case BattleEvent.BATTLE_TIMEOUT:
-                    battleListener.battleTimeout(evt);
-                    break;
-                case BattleEvent.BATTLE_BREAK:
-                    battleListener.battleBreak(evt);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        this.roles.clear();
-        this.redNumAnim = null;
-        this.greenNumAnim = null;
-        this.selectedItem = null;
-        this.adversaryTeam.clear();
-        this.ownsideTeam.clear();
-        this.backingRole = null;
-        this.battlebg = null;
-        this.cmdController = null;
-        this.emptyslotAnim = null;
-        this.hero = null;
-        this.indicatorAnim = null;
-        this.movingPlayer = null;
-        this.slotAnim = null;
-        this.targetRole = null;
     }
 }

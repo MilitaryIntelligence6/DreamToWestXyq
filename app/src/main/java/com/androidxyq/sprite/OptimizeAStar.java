@@ -73,8 +73,8 @@ public class OptimizeAStar implements Searcher {
         int currY = 0;
         int tmpX = 0;
         int tmpY = 0;
-        int[] xdirs = new int[] { -1, 1, -1, 1, 0, -1, 1, 0 };
-        int[] ydirs = new int[] { -1, -1, 1, 1, -1, 0, 0, 1 };
+        int[] xdirs = new int[]{-1, 1, -1, 1, 0, -1, 1, 0};
+        int[] ydirs = new int[]{-1, -1, 1, 1, -1, 0, 0, 1};
 
         openlist.add(tmpCoords);
 

@@ -26,9 +26,9 @@ public class UIFactory {
     public static LPanel createDialog(Screen screen, String dialogId, Map<String, Object> params) {
         initiliaze();
         UIBuilder builder = builders.get(dialogId);
-        if(builder != null){
+        if (builder != null) {
             LPanel panel = builder.createUI(params);
-            if(panel != null){
+            if (panel != null) {
                 panel.setName(dialogId);
                 return panel;
             }
@@ -36,16 +36,16 @@ public class UIFactory {
         return null;
     }
 
-    synchronized public static void initiliaze(){
-        if(!initialized){
+    synchronized public static void initiliaze() {
+        if (!initialized) {
             initialized = true;
             registerBuilders();
         }
     }
 
-    public static void registerBuilder(UIBuilder builder){
-        if(builder != null){
-            if(builders.get(builder.getId()) != null){
+    public static void registerBuilder(UIBuilder builder) {
+        if (builder != null) {
+            if (builders.get(builder.getId()) != null) {
                 Log.warn(UIFactory.class, "duplicate UI builders, id: {0}, class: {1} , {2}",
                         builder.getId(), builder.getClass(), builders.get(builder.getId()).getClass());
             }
@@ -53,7 +53,7 @@ public class UIFactory {
         }
     }
 
-    public static void registerBuilders(){
+    public static void registerBuilders() {
         // register ui builders
         registerBuilder(new HeroStatusPanel());
         registerBuilder(new BattleRoleCommandPanel());

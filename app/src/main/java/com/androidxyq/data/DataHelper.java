@@ -1,6 +1,7 @@
 package com.androidxyq.data;
 
 import android.graphics.Point;
+
 import com.androidxyq.sprite.PlayerStatus;
 
 import java.util.HashMap;
@@ -17,17 +18,17 @@ public class DataHelper {
     public static final String HERO_STATUS = "hero_status";
     private static Map<String, Object> dataStore = new HashMap<String, Object>();
 
-    public static Object get(String dataId){
+    public static Object get(String dataId) {
         return dataStore.get(dataId);
     }
 
-    public static void save(String dataId, Object value){
+    public static void save(String dataId, Object value) {
         dataStore.put(dataId, value);
     }
 
-    public static PlayerStatus getHeroStatus(){
+    public static PlayerStatus getHeroStatus() {
         PlayerStatus heroStatus = (PlayerStatus) get(HERO_STATUS);
-        if(heroStatus == null){
+        if (heroStatus == null) {
             heroStatus = createDefaultHero();
             save(HERO_STATUS, heroStatus);
         }
@@ -44,5 +45,5 @@ public class DataHelper {
         roleStatus.setSceneLocation(new Point(64, 24));
         return roleStatus;
     }
-    
+
 }

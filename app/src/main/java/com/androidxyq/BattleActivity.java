@@ -1,13 +1,5 @@
 package com.androidxyq;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.loon.framework.android.game.LMode;
-import org.loon.framework.android.game.core.LSystem;
-import org.loon.framework.android.game.utils.GraphicsUtils;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -17,6 +9,14 @@ import com.androidxyq.battle.BattleScreen;
 import com.androidxyq.sprite.Player;
 import com.androidxyq.sprite.PlayerStatus;
 import com.androidxyq.view.UIHelper;
+
+import org.loon.framework.android.game.LMode;
+import org.loon.framework.android.game.core.LSystem;
+import org.loon.framework.android.game.utils.GraphicsUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Battle 测试
@@ -28,20 +28,20 @@ import com.androidxyq.view.UIHelper;
 public class BattleActivity extends XYQActivity {
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
-    private final static int CWJ_HEAP_SIZE = 5* 1024* 1024 ;
+    private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         try {
-			Class<?> vmRumTimeClass;
-			vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
-			Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
-			vmRumTimeClass.getMethod("setTargetHeapUtilization", Float.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
-			vmRumTimeClass.getMethod("setMinimumHeapSize", Long.TYPE).invoke(runtime, CWJ_HEAP_SIZE);
-		} catch (Exception e) {
-			throw new RuntimeException("设置VM参数出错！");
-		}
+            Class<?> vmRumTimeClass;
+            vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
+            Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
+            vmRumTimeClass.getMethod("setTargetHeapUtilization", Float.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
+            vmRumTimeClass.getMethod("setMinimumHeapSize", Long.TYPE).invoke(runtime, CWJ_HEAP_SIZE);
+        } catch (Exception e) {
+            throw new RuntimeException("设置VM参数出错！");
+        }
     }
 
     @Override
@@ -79,6 +79,7 @@ public class BattleActivity extends XYQActivity {
                 }
                 LSystem.exit();
             }
+
             public void battleDefeated(BattleEvent e) {
                 UIHelper.prompt(battleScreen, "战斗失利了，不要灰心，加油努力，你一定行的！", 3000);
                 try {
@@ -87,8 +88,10 @@ public class BattleActivity extends XYQActivity {
                 }
                 LSystem.exit();
             }
+
             public void battleTimeout(BattleEvent e) {
             }
+
             public void battleBreak(BattleEvent e) {
             }
         });
@@ -99,12 +102,12 @@ public class BattleActivity extends XYQActivity {
         List<Player> adversaryTeam = new ArrayList<Player>();
 //            String[] elfs = {"2036","2037","2009","2010","2011","2012"};
 //            String[] elfNames = {"大海龟","巨蛙","芙蓉仙子","树怪","蝴蝶仙子","花妖"};
-        String[] elfs = {"2036","2037"};
-        String[] elfNames = {"大海龟","巨蛙"};
+        String[] elfs = {"2036", "2037"};
+        String[] elfNames = {"大海龟", "巨蛙"};
         Random random = new Random();
-        final int elfCount = random.nextInt(2)+1;
-        for(int i=0;i<elfCount;i++) {
-            int elflevel = Math.max(0,level+random.nextInt(4)-2);
+        final int elfCount = random.nextInt(2) + 1;
+        for (int i = 0; i < elfCount; i++) {
+            int elflevel = Math.max(0, level + random.nextInt(4) - 2);
             int elfIndex = random.nextInt(elfs.length);
             adversaryTeam.add(createMonster(elfs[elfIndex], elfNames[elfIndex], elflevel));
         }
@@ -122,7 +125,7 @@ public class BattleActivity extends XYQActivity {
         return player;
     }
 
-    private Player createHero(int level){
+    private Player createHero(int level) {
         PlayerStatus roleStatus = new PlayerStatus();
         roleStatus.setCharacter("0010");
         roleStatus.setName("东海潜龙");

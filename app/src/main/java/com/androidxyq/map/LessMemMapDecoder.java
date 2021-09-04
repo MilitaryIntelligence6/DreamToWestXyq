@@ -2,6 +2,7 @@ package com.androidxyq.map;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import org.loon.framework.android.game.core.resource.Resources;
 
 import java.io.ByteArrayOutputStream;
@@ -35,23 +36,23 @@ public class LessMemMapDecoder {
     public LessMemMapDecoder(String filename) throws MapDecodeException, IOException {
         this.filename = filename;
         this.inPos = 0;
-        System.err.println("load map: "+filename);
+        System.err.println("load map: " + filename);
         openStream();
         loadHeader();
     }
 
-    public Bitmap getTileBitmap(int x, int y){
+    public Bitmap getTileBitmap(int x, int y) {
         try {
             byte[] data = this.getJpegData(x, y);
-            return BitmapFactory.decodeByteArray(data,0,data.length);
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
         } catch (Exception e) {
-            System.err.println("读取地图失败: ("+x+","+y+"), "+e.getMessage());
+            System.err.println("读取地图失败: (" + x + "," + y + "), " + e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
 
-    public void dispose(){
+    public void dispose() {
         try {
             this.mapIn.close();
         } catch (IOException e) {
@@ -61,7 +62,6 @@ public class LessMemMapDecoder {
 
     /**
      * 从流加载MAP
-     *
      */
     private void loadHeader() throws MapDecodeException {
         if (!isValidMapFile()) {
@@ -96,8 +96,9 @@ public class LessMemMapDecoder {
         int ch2 = read();
         int ch3 = read();
         int ch4 = read();
-        if ((ch1 | ch2 | ch3 | ch4) < 0)
+        if ((ch1 | ch2 | ch3 | ch4) < 0) {
             throw new EOFException();
+        }
         return (ch1 + (ch2 << 8) + (ch3 << 16) + (ch4 << 24));
     }
 

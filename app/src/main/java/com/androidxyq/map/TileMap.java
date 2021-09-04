@@ -1,7 +1,7 @@
 /*
- * JavaXYQ Engine 
- * 
- * javaxyq@2008 all rights. 
+ * JavaXYQ Engine
+ *
+ * javaxyq@2008 all rights.
  * http://www.javaxyq.com
  */
 
@@ -14,7 +14,10 @@ import android.graphics.Point;
 
 import java.io.IOException;
 import java.lang.ref.SoftReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 龚德伟
@@ -22,38 +25,36 @@ import java.util.*;
  */
 public class TileMap {
 
-    /** 地图块像素宽度 */
+    /**
+     * 地图块像素宽度
+     */
     private static final int MAP_BLOCK_WIDTH = 320;
 
-    /** 地图块像素高度 */
+    /**
+     * 地图块像素高度
+     */
     private static final int MAP_BLOCK_HEIGHT = 240;
-
+    private static final int LEVEL2_BITMAP_CACHE_LIMIT = 24;
     private LessMemMapDecoder provider;
-
     private SoftReference<Bitmap>[][] tileTable;
-
     private Map<String, Bitmap> bitmapCache = new HashMap<String, Bitmap>();
     private List<Bitmap> bitmapL2Cache = new ArrayList<Bitmap>();
-
-    /** 地图X方向块数 */
+    /**
+     * 地图X方向块数
+     */
     private int xBlockCount;
-
-    /** 地图Y方向块数 */
+    /**
+     * 地图Y方向块数
+     */
     private int yBlockCount;
-
     private int width;
-
     private int height;
-
     private MapConfig config;
-
     private int lastCount;
-
     private int viewportWidth;
     private int viewportHeight;
     private int viewportX;
     private int viewportY;
-    private static final int LEVEL2_BITMAP_CACHE_LIMIT = 24;
 
     public TileMap(MapConfig cfg) throws IOException, MapDecodeException {
         //水平方向w块，垂直方向h块
@@ -65,8 +66,8 @@ public class TileMap {
         this.height = provider.getHeight();
         tileTable = new SoftReference[this.xBlockCount][this.yBlockCount];
         this.provider = provider;
-        this.setViewportSize(640,480);
-        this.setViewportPosition(0,0);
+        this.setViewportSize(640, 480);
+        this.setViewportPosition(0, 0);
     }
 
     synchronized public void draw(Canvas canvas) {
@@ -88,12 +89,11 @@ public class TileMap {
                 canvas.drawBitmap(img, i * MAP_BLOCK_WIDTH, j * MAP_BLOCK_HEIGHT, null);
             }
         }
-        canvas.translate(-dx,-dy);
+        canvas.translate(-dx, -dy);
     }
 
     /**
      * 预加载此区域的地图块
-     *
      */
     synchronized public void preload() {
         // 1.计算Rect落在的图块
@@ -111,19 +111,19 @@ public class TileMap {
         for (int i = 0; i < xCount; i++) {
             for (int j = 0; j < yCount; j++) {
                 String key = createCacheKey(i + pFirstBlock.x, j + pFirstBlock.y);
-                if(removingCacheKeys.contains(key)){
+                if (removingCacheKeys.contains(key)) {
                     removingCacheKeys.remove(key);
                 }
             }
         }
         //从一级缓存删除对象
-        for(String key: removingCacheKeys){
+        for (String key : removingCacheKeys) {
             Bitmap bitmap = bitmapCache.remove(key);
             //放到二级缓存中
             bitmapL2Cache.add(0, bitmap);
         }
         //限制二级缓存数量（FIFO）
-        while(bitmapL2Cache.size() > LEVEL2_BITMAP_CACHE_LIMIT){
+        while (bitmapL2Cache.size() > LEVEL2_BITMAP_CACHE_LIMIT) {
             bitmapL2Cache.remove(bitmapL2Cache.size() - 1);
         }
         //加载新的地图块 缓存
@@ -137,7 +137,7 @@ public class TileMap {
     }
 
     private String createCacheKey(int x, int y) {
-        return "tile-"+x+"-"+y;
+        return "tile-" + x + "-" + y;
     }
 
     private int checkTable() {
@@ -166,7 +166,7 @@ public class TileMap {
         //如果此地图块还没加载,则取地图块数据并生成图像
         //如果GC由于低内存,已释放image,需要重新装载
         if (reference == null || reference.get() == null) {
-            System.err.println("load map tile: ("+x+","+y+")");
+            System.err.println("load map tile: (" + x + "," + y + ")");
             reference = new SoftReference<Bitmap>(provider.getTileBitmap(x, y));
             this.tileTable[x][y] = reference;
         }
@@ -190,13 +190,13 @@ public class TileMap {
         yBlockCount = blockCount;
     }
 
-    public void setViewportSize(int width, int height){
+    public void setViewportSize(int width, int height) {
         this.viewportWidth = width;
         this.viewportHeight = height;
     }
 
-    public void setViewportPosition(int vx, int vy){
-        if(this.viewportX != vx || this.viewportY != vy){
+    public void setViewportPosition(int vx, int vy) {
+        if (this.viewportX != vx || this.viewportY != vy) {
             this.viewportX = vx;
             this.viewportY = vy;
             //System.err.println("viewport: ("+vx+","+vy+")");
@@ -212,10 +212,12 @@ public class TileMap {
         Point p = new Point();
         p.x = x / MAP_BLOCK_WIDTH;
         p.y = y / MAP_BLOCK_HEIGHT;
-        if (p.x < 0)
+        if (p.x < 0) {
             p.x = 0;
-        if (p.y < 0)
+        }
+        if (p.y < 0) {
             p.y = 0;
+        }
         return p;
     }
 

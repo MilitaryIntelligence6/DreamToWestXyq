@@ -14,12 +14,14 @@ import java.util.Map;
 public interface UIBuilder {
     /**
      * 界面的id
+     *
      * @return
      */
     String getId();
 
     /**
      * 创建界面对象
+     *
      * @return
      */
     LPanel createUI(Map<String, Object> params);

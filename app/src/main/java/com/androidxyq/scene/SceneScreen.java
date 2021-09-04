@@ -2,19 +2,25 @@ package com.androidxyq.scene;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
+
 import com.androidxyq.XYQActivity;
 import com.androidxyq.graph.Animation;
 import com.androidxyq.graph.SpriteFactory;
 import com.androidxyq.log.Log;
 import com.androidxyq.map.MapConfig;
 import com.androidxyq.map.TileMap;
-import com.androidxyq.sprite.*;
+import com.androidxyq.sprite.OptimizeAStar;
+import com.androidxyq.sprite.Player;
+import com.androidxyq.sprite.PlayerAdapter;
+import com.androidxyq.sprite.PlayerEvent;
+import com.androidxyq.sprite.PlayerStatus;
+import com.androidxyq.sprite.Searcher;
 import com.androidxyq.util.SearchUtils;
 import com.androidxyq.view.SRPGChoiceView;
 import com.androidxyq.view.UIHelper;
+
 import org.loon.framework.android.game.core.LSystem;
 import org.loon.framework.android.game.core.LTransition;
-import org.loon.framework.android.game.core.graphics.LComponent;
 import org.loon.framework.android.game.core.graphics.LFont;
 import org.loon.framework.android.game.core.graphics.LImage;
 import org.loon.framework.android.game.core.graphics.Screen;
@@ -32,7 +38,7 @@ import java.util.List;
 
 /**
  * 游戏场景地图界面
- *
+ * <p>
  * <p/>
  * User: gongdewei
  * Date: 12-3-21
@@ -51,7 +57,9 @@ public class SceneScreen extends Screen {
     private int viewportY;
     private int viewportX;
 
-    /** 自动调节视窗 */
+    /**
+     * 自动调节视窗
+     */
     private boolean adjustViewport;
     //地图移动的加速度
     private double viewportAx = -5;
@@ -60,10 +68,14 @@ public class SceneScreen extends Screen {
     private double viewportVx = 10;
     private double viewportVy = 10;
 
-    /** 当前场景名称 */
+    /**
+     * 当前场景名称
+     */
     private String sceneName;
 
-    /** 当前场景id */
+    /**
+     * 当前场景id
+     */
     private String sceneId;
 
     private byte[] mapBlockData;
@@ -74,17 +86,17 @@ public class SceneScreen extends Screen {
 
     private List<Point> path;
 
-    private TileMap  map;
+    private TileMap map;
 
     private Searcher searcher;
 
     private Player hero;// 角色
-    
+
     private boolean isGameMenuOpen;//游戏系统菜单是否打开
 
     private int targetViewportX;
     private int targetViewportY;
-    
+
     private List<Player> npcs; //当前地图NPC
 
     private Player targetNpc;//当前对话的NPC
@@ -96,7 +108,7 @@ public class SceneScreen extends Screen {
     //NPC对话的选择框
     private SRPGChoiceView npcDialogueView;
     private List<NpcDialogueHandler> npcHandlers;
-//    private LPanel heroStatusPanel;
+    //    private LPanel heroStatusPanel;
     private PlayerStatus heroStatus;
     private List<PlayerStatus> npcStatusList;
     private boolean loaded;
@@ -109,19 +121,19 @@ public class SceneScreen extends Screen {
 //        searcher = new AStar();
         searcher = new OptimizeAStar();
         npcs = new ArrayList<Player>();
-        npcDialogueView = new  SRPGChoiceView();
+        npcDialogueView = new SRPGChoiceView();
         npcHandlers = new ArrayList<NpcDialogueHandler>();
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        long t1,t2,t3, t4, t5,t6;
+        long t1, t2, t3, t4, t5, t6;
         t1 = System.currentTimeMillis();
         //创建窗口UI
         createMainWinUI();
 
-        if(loaded){
+        if (loaded) {
             Point pos = hero.getSceneLocation();
             setPlayerSceneLocation(pos.x, pos.y);
             return;
@@ -130,11 +142,11 @@ public class SceneScreen extends Screen {
         //加载地图
         t2 = System.currentTimeMillis();
         clickEffect = SpriteFactory.loadAnimation("assets/addon/wave.tcp");
-        setMap(new MapConfig(sceneId,sceneName));
+        setMap(new MapConfig(sceneId, sceneName));
         //为了加快首次显示速度，应该将人物的坐标设置为倍数：x=16*n, y=12*m
         Point pos = heroStatus.getSceneLocation();
         Point pp = sceneToLocal(pos);
-        this.setViewPosition(pp.x - getWidth()/2, pp.y - getHeight()/2);
+        this.setViewPosition(pp.x - getWidth() / 2, pp.y - getHeight() / 2);
         //this.moveViewportTo(pp.x - 320, pp.y - 240);
 
         //创建英雄角色
@@ -146,13 +158,13 @@ public class SceneScreen extends Screen {
         t4 = System.currentTimeMillis();
 
         //创建NPC
-        for(int i=0;i< npcStatusList.size();i++){
+        for (int i = 0; i < npcStatusList.size(); i++) {
             Player npc1 = new Player(npcStatusList.get(i));
             addNPC(npc1);
         }
         t5 = System.currentTimeMillis();
-        System.err.println("scene("+player.getSceneX()+","+player.getSceneY()+"): player: ("+player.getLocation()+"), viewport:("+getViewPosition()+")");
-        System.err.println("cost: "+(t4-t1)+", mainwin: "+(t2-t1)+", map: "+(t3-t2)+", player: "+(t4-t3)+", npc: "+(t5-t4));
+        System.err.println("scene(" + player.getSceneX() + "," + player.getSceneY() + "): player: (" + player.getLocation() + "), viewport:(" + getViewPosition() + ")");
+        System.err.println("cost: " + (t4 - t1) + ", mainwin: " + (t2 - t1) + ", map: " + (t3 - t2) + ", player: " + (t4 - t3) + ", npc: " + (t5 - t4));
 
         //延时加载角色的行走动画
         invokeLater(new Runnable() {
@@ -174,7 +186,7 @@ public class SceneScreen extends Screen {
     public void onLoaded() {
         super.onLoaded();
         getHero().stop(true);
-        XYQActivity.playSound("music/"+this.getSceneId()+".mp3");
+        XYQActivity.playSound("music/" + this.getSceneId() + ".mp3");
     }
 
     @Override
@@ -211,31 +223,33 @@ public class SceneScreen extends Screen {
         LPaper heroframeComp = new LPaper(new LImage(heroframe), 522, 0);
         LImage blankImg = new LImage(blank);
         LPaper[] blankComps = new LPaper[4];
-        blankComps[0] = new LPaper(blankImg,572,0);
-        blankComps[1] = new LPaper(blankImg,572,12);
-        blankComps[2] = new LPaper(blankImg,572,24);
-        blankComps[3] = new LPaper(blankImg,572,36);
-        LPaper hpComp = new LPaper(new LImage(hp),585,3);
-        LPaper mpComp = new LPaper(new LImage(mp),585,15);
-        LPaper expComp = new LPaper(new LImage(exp),585,39);
+        blankComps[0] = new LPaper(blankImg, 572, 0);
+        blankComps[1] = new LPaper(blankImg, 572, 12);
+        blankComps[2] = new LPaper(blankImg, 572, 24);
+        blankComps[3] = new LPaper(blankImg, 572, 36);
+        LPaper hpComp = new LPaper(new LImage(hp), 585, 3);
+        LPaper mpComp = new LPaper(new LImage(mp), 585, 15);
+        LPaper expComp = new LPaper(new LImage(exp), 585, 39);
         LImage headerImage = new LImage(heroHeader);
-        LImage[] headerImages = new LImage[]{headerImage,headerImage,headerImage};
-        LButton heroHeaderComp = new LButton(headerImages,"",heroHeader.getWidth(),heroHeader.getHeight(), 526, 3){
+        LImage[] headerImages = new LImage[]{headerImage, headerImage, headerImage};
+        LButton heroHeaderComp = new LButton(headerImages, "", heroHeader.getWidth(), heroHeader.getHeight(), 526, 3) {
             @Override
             public void doClick() {
                 getHero().stop(true);
                 toogleHeroStatusPanel();
             }
+
             @Override
             public void downClick() {
-                if(!this.isTouchPressed()){
-                    this.setLocation(this.x()+1, this.y()+1);
+                if (!this.isTouchPressed()) {
+                    this.setLocation(this.x() + 1, this.y() + 1);
                 }
             }
+
             @Override
             public void upClick() {
-                if(this.isTouchPressed()){
-                    this.setLocation(this.x()-1, this.y()-1);
+                if (this.isTouchPressed()) {
+                    this.setLocation(this.x() - 1, this.y() - 1);
                 }
             }
         };
@@ -258,21 +272,21 @@ public class SceneScreen extends Screen {
     }
 
     protected void drawNpcDialogue(LGraphics g) {
-        if(npcDialogueView!=null && npcDialogueView.isExist()){
+        if (npcDialogueView != null && npcDialogueView.isExist()) {
             npcDialogueView.drawChoice(g);
         }
     }
 
     private void drawClickEffect(LGraphics g) {
-        if(clicking){
+        if (clicking) {
             Point p = this.localToView(clickLocation);
             clickEffect.draw(g.getCanvas(), p.x, p.y);
-        }                  
+        }
     }
 
     protected void drawHero(LGraphics g) {
         try {
-            if(hero != null){
+            if (hero != null) {
                 Point p = this.localToView(hero.getLocation());
                 hero.draw(g.getCanvas(), p.x, p.y);
             }
@@ -283,7 +297,7 @@ public class SceneScreen extends Screen {
 
     protected void drawNPC(LGraphics g) {
         try {
-            for(int i=0;i<npcs.size();i++){
+            for (int i = 0; i < npcs.size(); i++) {
                 Player npc = npcs.get(i);
                 Point p = this.localToView(npc.getLocation());
                 npc.draw(g.getCanvas(), p.x, p.y);
@@ -295,7 +309,7 @@ public class SceneScreen extends Screen {
 
     protected void drawMap(LGraphics g) {
         try {
-            if(map != null){
+            if (map != null) {
                 map.draw(g.getCanvas());
             }
         } catch (Exception e) {
@@ -307,9 +321,9 @@ public class SceneScreen extends Screen {
         LFont oldfont = g.getFont();
         g.setFont(fpsFont);
         g.drawString(getSceneName(), 5, 70);
-        if(getHero() != null){
+        if (getHero() != null) {
             Point sp = getHero().getSceneLocation();
-            String str = "X:"+sp.x +"  Y:"+sp.y;
+            String str = "X:" + sp.x + "  Y:" + sp.y;
             g.drawString(str, 5, 90);
         }
         g.setFont(oldfont);
@@ -318,18 +332,18 @@ public class SceneScreen extends Screen {
     @Override
     public void update(long elapsedTime) {
         super.update(elapsedTime);
-        if(clickEffect != null){
-            if(clickEffect.isFinished()){
+        if (clickEffect != null) {
+            if (clickEffect.isFinished()) {
                 clicking = false;
-            }else {
+            } else {
                 clickEffect.update(elapsedTime);
             }
         }
-        if(hero != null){
+        if (hero != null) {
             hero.update(elapsedTime);
             hero.updateMovement(elapsedTime);
         }
-        for(int i=0;i<npcs.size();i++){
+        for (int i = 0; i < npcs.size(); i++) {
             npcs.get(i).update(elapsedTime);
             npcs.get(i).updateMovement(elapsedTime);
         }
@@ -343,12 +357,12 @@ public class SceneScreen extends Screen {
 
     @Override
     public void onTouchDown(LTouch e) {
-    	//游戏系统菜单打开
-    	if(isGameMenuOpen) {
-    		return;
-    	}
-        int y = (int)e.getY();
-        int x = (int)e.getX();
+        //游戏系统菜单打开
+        if (isGameMenuOpen) {
+            return;
+        }
+        int y = (int) e.getY();
+        int x = (int) e.getX();
         //如果点击在UI组件上则不处理
         // FIXME: 2021/9/4 找到替代;
 //        if(findComponent(x,y) != null){
@@ -356,11 +370,11 @@ public class SceneScreen extends Screen {
 //        }
 
         //传递事件给对话框
-        if(npcDialogueView.isExist()){
+        if (npcDialogueView.isExist()) {
             int select = npcDialogueView.getContent();
-            int choice = npcDialogueView.choiceMouse(x,y);
+            int choice = npcDialogueView.choiceMouse(x, y);
             npcDialogueView.setContent(choice);
-            if(choice != -1 && select == choice ){
+            if (choice != -1 && select == choice) {
                 npcDialogueView.choiceExecute();
                 npcDialogueView.setExist(false);
             }
@@ -370,17 +384,17 @@ public class SceneScreen extends Screen {
         //1.判断是否点击到NPC或者自身
         boolean clickedNpc = false;
         Point pos = this.viewToLocal(new Point(x, y));
-        for(int i=0;i<npcs.size();i++){
+        for (int i = 0; i < npcs.size(); i++) {
             Player npc = npcs.get(i);
-            if(npc.collision(pos.x, pos.y)){
+            if (npc.collision(pos.x, pos.y)) {
                 handleClickNpc(npc, pos);
                 clickedNpc = true;
                 break;
             }
         }
-        
+
         //2.点击地图的处理
-        if(!clickedNpc){
+        if (!clickedNpc) {
             cancelClickNpc();
             setClickEffect(x, y);
         }
@@ -398,7 +412,7 @@ public class SceneScreen extends Screen {
     @Override
     public void onTouchMove(LTouch e) {
         if (npcDialogueView.isExist()) {
-            npcDialogueView.setContent(npcDialogueView.choiceMouse(e.x(),e.y()));
+            npcDialogueView.setContent(npcDialogueView.choiceMouse(e.x(), e.y()));
         }
     }
 
@@ -424,25 +438,25 @@ public class SceneScreen extends Screen {
     //------------------------------------------------------------------------//
 
     private void scrollViewport(int x, int y) {
-        int fx = 0,fy=0;
-        if(x < 50){
+        int fx = 0, fy = 0;
+        if (x < 50) {
             fx = -1;
-        }else if(x > 590){
+        } else if (x > 590) {
             fx = 1;
         }
-        if(y<50){
+        if (y < 50) {
             fy = -1;
-        }else if(y>430){
+        } else if (y > 430) {
             fy = 1;
         }
-        if(fx != 0 || fy != 0){
+        if (fx != 0 || fy != 0) {
             moveViewportAsBand(fx, fy);
             return;
         }
     }
 
     protected void cancelClickNpc() {
-        if(targetNpc != null){
+        if (targetNpc != null) {
             targetNpc.setHover(false);
             targetNpc = null;
         }
@@ -450,6 +464,7 @@ public class SceneScreen extends Screen {
 
     /**
      * 处理点击到NPC的事件
+     *
      * @param npc
      * @param pos
      */
@@ -457,49 +472,54 @@ public class SceneScreen extends Screen {
         cancelClickNpc();
         targetNpc = npc;
         npc.setHover(true);
-        System.err.println("clickNpc: "+npc.getName());
+        System.err.println("clickNpc: " + npc.getName());
     }
 
     /**
      * 设置点击地图的动画效果
+     *
      * @param x
      * @param y
      */
     protected void setClickEffect(int x, int y) {
         clickEffect.setRepeat(2);
-        clickLocation = viewToLocal(new Point(x,y));
+        clickLocation = viewToLocal(new Point(x, y));
         clicking = true;
     }
 
     /**
      * 添加一个NPC到队列中
+     *
      * @param npc
      */
-    protected void addNPC(Player npc){
+    protected void addNPC(Player npc) {
         Point p = this.sceneToLocal(npc.getSceneLocation());
         npc.setLocation(p.x, p.y);
         npcs.add(npc);
     }
+
     /**
      * 以橡皮圈的弹性方式移动viewport
+     *
      * @param fx
      * @param fy
      */
     synchronized private void moveViewportAsBand(int fx, int fy) {
         this.adjustViewport = true;
-        viewportVx = fx*160;
-        viewportVy = fy*120;
-        viewportAx = fx*-40;
-        viewportAy = fy*-30;
-        System.err.println("adjust: v=("+viewportVx+","+viewportY+"), ("+viewportAx+","+viewportAy+")");
+        viewportVx = fx * 160;
+        viewportVy = fy * 120;
+        viewportAx = fx * -40;
+        viewportAy = fy * -30;
+        System.err.println("adjust: v=(" + viewportVx + "," + viewportY + "), (" + viewportAx + "," + viewportAy + ")");
     }
 
     /**
      * 将viewport移动到目标位置（地图世界坐标系统）
+     *
      * @param localX
      * @param localY
      */
-    synchronized  private  void moveViewportTo(int localX, int localY){
+    synchronized private void moveViewportTo(int localX, int localY) {
         targetViewportX = localX;
         targetViewportY = localY;
     }
@@ -533,32 +553,22 @@ public class SceneScreen extends Screen {
         }
     }
 
-    public void setHero(Player hero) {
-        Player player0 = getHero();
-        if (player0 != null) {
-            player0.stop(false);
-            player0.removePlayerListener();
-        }
-        this.hero = hero;
-        if (hero != null) {
-            hero.stop(false);
-            hero.setScene(this);
-            hero.setPlayerListener(new ScenePlayerHandler());
-        }
-        Point sp = hero.getSceneLocation();
-        setPlayerSceneLocation(sp.x, sp.y);
-    }
-
-
     /**
      * 将人物移到场景位置p，同时自动修正地图
-     *
      */
     public void setPlayerSceneLocation(int sceneX, int sceneY) {
-        if(sceneX < 0)sceneX = 0;
-        if(sceneY<0)sceneY=0;
-        if(sceneX>sceneWidth)sceneX = sceneWidth;
-        if(sceneY>sceneHeight)sceneY=sceneHeight;
+        if (sceneX < 0) {
+            sceneX = 0;
+        }
+        if (sceneY < 0) {
+            sceneY = 0;
+        }
+        if (sceneX > sceneWidth) {
+            sceneX = sceneWidth;
+        }
+        if (sceneY > sceneHeight) {
+            sceneY = sceneHeight;
+        }
 
         getHero().setSceneLocation(sceneX, sceneY);
         Point vp = sceneToLocal(new Point(sceneX, sceneY));
@@ -588,9 +598,8 @@ public class SceneScreen extends Screen {
 
     /**
      * 移动视窗(viewport),跟随人物移动
-     *
      */
-    synchronized  private void syncSceneAndPlayer() {
+    synchronized private void syncSceneAndPlayer() {
         Point p = getPlayerLocation();
         //System.err.println("player:("+p.x+","+p.y+")");
         //计算出新的场景坐标
@@ -599,34 +608,34 @@ public class SceneScreen extends Screen {
 
         //走出中心区才移动视窗
         Point vp = this.localToView(p);
-        int fx=0,fy=0;
-        if(vp.x < 200) {
+        int fx = 0, fy = 0;
+        if (vp.x < 200) {
             fx = -1;
-        }else if(vp.x > 480) {
+        } else if (vp.x > 480) {
             fx = 1;
         }
-        if(vp.y < 150) {
+        if (vp.y < 150) {
             fy = -1;
-        }else if(vp.y > 330) {
+        } else if (vp.y > 330) {
             fy = 1;
         }
         // TODO 改善误差   设置视窗(viewport)的位置
         // 按人物进方向移动viewport
-        if(fx!=0 || fy!=0) {
+        if (fx != 0 || fy != 0) {
             //setViewPosition(vpos.x+dx, vpos.y+dy);
             //System.out.printf("view: (%s,%s)\n",vpos.x,vpos.y);
 
             //计算出视窗移动的速度和加速度
             //dx=(v*v)/2a
             Point vpos = getViewPosition();
-            int dx = p.x - getWidth()/2 - vpos.x;
-            int dy = p.y - getHeight()/2 -vpos.y;
+            int dx = p.x - getWidth() / 2 - vpos.x;
+            int dy = p.y - getHeight() / 2 - vpos.y;
             //if t=4s, v=at=4a, => dx=8a
-            double ax = dx/8.0;
-            double ay = dy/8.0;
+            double ax = dx / 8.0;
+            double ay = dy / 8.0;
 
-            viewportVx = 5*ax;//增加1/4比例
-            viewportVy = 5*ay;
+            viewportVx = 5 * ax;//增加1/4比例
+            viewportVy = 5 * ay;
             viewportAx = -ax;
             viewportAy = -ay;
 //            viewportVx = fx*200;
@@ -634,7 +643,7 @@ public class SceneScreen extends Screen {
 //            viewportAx = fx*-60;
 //            viewportAy = fy*-40;
             adjustViewport = true;
-            System.out.printf("adjustView: vx=%s, vy=%s, ax=%s, ay=%s\n",viewportVx,viewportVy,viewportAx,viewportAy);
+            System.out.printf("adjustView: vx=%s, vy=%s, ax=%s, ay=%s\n", viewportVx, viewportVy, viewportAx, viewportAy);
         }
     }
 
@@ -643,35 +652,35 @@ public class SceneScreen extends Screen {
      */
     synchronized private void updateMovements(long elapsedTime) {
         //move view
-        if(this.adjustViewport) {
-            if(this.viewportVx != 0 || this.viewportVy != 0) {
+        if (this.adjustViewport) {
+            if (this.viewportVx != 0 || this.viewportVy != 0) {
                 Point vp = getViewPosition();
-                double t = elapsedTime*1.0/1000;
-                int vx = (int) (viewportVx + viewportAx*t);
-                int vy = (int) (viewportVy + viewportAy*t);
-                int dx=0, dy=0;
-                if(Math.abs(viewportVx) - Math.abs(vx) > 0) {
-                    dx = (int) (viewportVx*t + viewportAx*t*t/2);
+                double t = elapsedTime * 1.0 / 1000;
+                int vx = (int) (viewportVx + viewportAx * t);
+                int vy = (int) (viewportVy + viewportAy * t);
+                int dx = 0, dy = 0;
+                if (Math.abs(viewportVx) - Math.abs(vx) > 0) {
+                    dx = (int) (viewportVx * t + viewportAx * t * t / 2);
                     viewportVx = vx;
-                }else {
+                } else {
                     viewportVx = 0;
                     viewportAx = 0;
                 }
-                if(Math.abs(viewportVy) - Math.abs(vy) > 0) {
-                    dy = (int) (viewportVy*t + viewportAy*t*t/2);
+                if (Math.abs(viewportVy) - Math.abs(vy) > 0) {
+                    dy = (int) (viewportVy * t + viewportAy * t * t / 2);
                     viewportVy = vy;
-                }else {
+                } else {
                     viewportVy = 0;
                     viewportAy = 0;
                 }
                 //System.out.printf("move view: v(%s,%s) \n",viewportVx, viewportVy);
-                if(viewportVx == 0 && viewportVy == 0) {
+                if (viewportVx == 0 && viewportVy == 0) {
                     viewportAx = 0;
                     viewportAy = 0;
                     adjustViewport = false;
                 }
-                setViewPosition(vp.x+dx, vp.y+dy);
-            }else {
+                setViewPosition(vp.x + dx, vp.y + dy);
+            } else {
                 viewportVx = 0;
                 viewportVy = 0;
                 viewportAx = 0;
@@ -691,7 +700,6 @@ public class SceneScreen extends Screen {
     public boolean pass(int x, int y) {
         return searcher.pass(x, y);
     }
-
 
     public Point sceneToLocal(Point p) {
         return new Point(p.x * XYQActivity.STEP_DISTANCE, getMaxHeight() - p.y * XYQActivity.STEP_DISTANCE);
@@ -732,13 +740,15 @@ public class SceneScreen extends Screen {
      * @param y
      */
     public void walkTo(int x, int y) {
-        if(x<=0 || y<=0 || x> sceneWidth || y>sceneHeight)return;
+        if (x <= 0 || y <= 0 || x > sceneWidth || y > sceneHeight) {
+            return;
+        }
         Point p = this.getPlayerSceneLocation();
         Log.debug(this, "walk to: ({0},{1}) -> ({2},{3})", p.x, p.y, x, y);
-        long t1=System.currentTimeMillis(),t2;
+        long t1 = System.currentTimeMillis(), t2;
         this.path = this.findPath(x, y);
-        t2=System.currentTimeMillis();
-        Log.debug(this, "findPath cost: {0} s",(t2-t1)/1000.0);
+        t2 = System.currentTimeMillis();
+        Log.debug(this, "findPath cost: {0} s", (t2 - t1) / 1000.0);
         if (path != null) {
             getHero().setPath(path);
             getHero().move();
@@ -763,10 +773,10 @@ public class SceneScreen extends Screen {
     public List<Point> findPath(int x, int y) {
         Point source = getPlayerSceneLocation();
         Point target = findNearestReachablePos(x, y);
-        if(target==null || !pass(target.x, target.y)) {
+        if (target == null || !pass(target.x, target.y)) {
             return null;
         }
-        if(target.equals(source)){
+        if (target.equals(source)) {
             //TODO change direction?
             return null;
         }
@@ -774,37 +784,37 @@ public class SceneScreen extends Screen {
         try {
             return searcher.findPath(source.x, source.y, target.x, target.y);
         } catch (Exception e) {
-            Log.error(this,"查找路径失败, target：("+x+","+y+"), msg: "+e.getMessage(), e);
+            Log.error(this, "查找路径失败, target：(" + x + "," + y + "), msg: " + e.getMessage(), e);
         }
         return null;
     }
-    
-    private Point findNearestReachablePos(int x,int y){
+
+    private Point findNearestReachablePos(int x, int y) {
         Point source = getPlayerSceneLocation();
         Point target = new Point(x, y);
-        if(!pass(x, y)) {
-                //寻找四周最近可到达的点
-                int range = 2;
-                int dx=(target.x > source.x)? -1 : 1;
-                int dy=(target.y > source.y)? -1 : 1;
-                int[] xx = new int[range*2+1];
-                int[] yy = new int[range*2+1];
-                xx[0]=x;
-                yy[0]=y;
-                for(int r0=1,idx=1;r0<=range;r0++){
-                    xx[idx++]=x + r0*dx;
-                    xx[idx++]=x - r0*dx;
-                }
-                for(int r0=1,idx=1;r0<=range;r0++){
-                    yy[idx++] = y + r0*dy;
-                    yy[idx++] = y - r0*dy;
-                }
-                //从里向外遍历
-                for(int xi=0;xi<xx.length;xi++){
-                for(int yi=0;yi<yy.length;yi++){
-                    if(pass(xx[xi],yy[yi])){
-                        target = new Point(xx[xi],yy[yi]);
-                        Log.debug(this,"find nearest reachable pos: ({0},{1})", target.x, target.y);
+        if (!pass(x, y)) {
+            //寻找四周最近可到达的点
+            int range = 2;
+            int dx = (target.x > source.x) ? -1 : 1;
+            int dy = (target.y > source.y) ? -1 : 1;
+            int[] xx = new int[range * 2 + 1];
+            int[] yy = new int[range * 2 + 1];
+            xx[0] = x;
+            yy[0] = y;
+            for (int r0 = 1, idx = 1; r0 <= range; r0++) {
+                xx[idx++] = x + r0 * dx;
+                xx[idx++] = x - r0 * dx;
+            }
+            for (int r0 = 1, idx = 1; r0 <= range; r0++) {
+                yy[idx++] = y + r0 * dy;
+                yy[idx++] = y - r0 * dy;
+            }
+            //从里向外遍历
+            for (int xi = 0; xi < xx.length; xi++) {
+                for (int yi = 0; yi < yy.length; yi++) {
+                    if (pass(xx[xi], yy[yi])) {
+                        target = new Point(xx[xi], yy[yi]);
+                        Log.debug(this, "find nearest reachable pos: ({0},{1})", target.x, target.y);
                         return target;
                     }
                 }
@@ -825,64 +835,13 @@ public class SceneScreen extends Screen {
                 Point p = path.get(i);
                 if (pass(p.x, p.y)) {
                     target = p;
-                    Log.debug(this,"find nearest line reachable pos: ({0},{1})", target.x, target.y);
+                    Log.debug(this, "find nearest line reachable pos: ({0},{1})", target.x, target.y);
                     return target;
                 }
                 path.remove(i);
             }
         }
         return target;
-    }
-
-    protected void setMap(MapConfig mapcfg) {
-        try {
-            map = new TileMap(mapcfg);
-            //map.setViewportPosition(200, 300);
-            //map.preload();
-        } catch (Exception e) {
-            System.err.println("加载地图失败: "+e.getMessage());
-            e.printStackTrace();
-        }
-        if (map == null) {
-            return;
-        }
-
-        this.maxWidth = map.getWidth();
-        this.maxHeight = map.getHeight();
-        sceneWidth = map.getWidth() / XYQActivity.STEP_DISTANCE;
-        sceneHeight = map.getHeight() / XYQActivity.STEP_DISTANCE;
-        this.map = map;
-        MapConfig cfg = map.getConfig();
-        this.sceneId = cfg.getId();
-        this.sceneName = cfg.getName();
-
-        //场景跳转点
-/*
-        this.triggerList = new ArrayList<Trigger>();
-        Integer _sceneId = Integer.valueOf(sceneId);
-        List<SceneTeleporter> teleporters = getDataManager().findTeleportersBySceneId(_sceneId);
-        for (int i = 0; i < teleporters.size(); i++) {
-            triggerList.add(new JumpTrigger(teleporters.get(i)));
-        }
-        //场景npc
-        clearNPCs();
-        List<SceneNpc> _npcs = getDataManager().findNpcsBySceneId(_sceneId);
-        for (int i = 0; i < _npcs.size(); i++) {
-            Player npc = getDataManager().createNPC(_npcs.get(i));
-            Point p = sceneToLocal(npc.getSceneLocation());
-            npc.setLocation(p.x, p.y);
-            this.addNPC(npc);
-        }
-
-        // test! get barrier image
-        this.mapMask = new ImageIcon(cfg.getPath().replace(".map", "_bar.png")).getImage();
-*/
-
-        mapBlockData = loadBlock(cfg.getPath().replace(".map", ".msk"));
-        searcher.init(sceneWidth, sceneHeight, mapBlockData);
-        //play music
-        String musicfile = cfg.getPath().replaceAll("\\.map", ".mp3").replaceAll("scene","music");
-        //TODO 切换场景音乐
     }
 
     /**
@@ -933,6 +892,22 @@ public class SceneScreen extends Screen {
         return hero;
     }
 
+    public void setHero(Player hero) {
+        Player player0 = getHero();
+        if (player0 != null) {
+            player0.stop(false);
+            player0.removePlayerListener();
+        }
+        this.hero = hero;
+        if (hero != null) {
+            hero.stop(false);
+            hero.setScene(this);
+            hero.setPlayerListener(new ScenePlayerHandler());
+        }
+        Point sp = hero.getSceneLocation();
+        setPlayerSceneLocation(sp.x, sp.y);
+    }
+
     public String getSceneId() {
         return sceneId;
     }
@@ -950,25 +925,25 @@ public class SceneScreen extends Screen {
     }
 
     public boolean isGameMenuOpen() {
-		return isGameMenuOpen;
-	}
+        return isGameMenuOpen;
+    }
 
-	public void setGameMenuOpen(boolean isGameMenuOpen) {
-		this.isGameMenuOpen = isGameMenuOpen;
-	}
+    public void setGameMenuOpen(boolean isGameMenuOpen) {
+        this.isGameMenuOpen = isGameMenuOpen;
+    }
 
-	/**
+    /**
      * 与NPC对话
      */
     protected void talkToNpc() {
         getHero().stop();
         String npcName = targetNpc.getName();
-        System.err.println("与NPC对话："+ npcName);
+        System.err.println("与NPC对话：" + npcName);
         //选择一个Npc Handler
         NpcDialogueHandler npcHandler = null;
-        for(int i=0;i<npcHandlers.size();i++){
+        for (int i = 0; i < npcHandlers.size(); i++) {
             NpcDialogueHandler handler = npcHandlers.get(i);
-            if(handler.support(getSceneId(),npcName)){
+            if (handler.support(getSceneId(), npcName)) {
                 npcHandler = handler;
                 break;
             }
@@ -980,11 +955,11 @@ public class SceneScreen extends Screen {
         npcDialogueView.setContent(-1);
         int choice = npcDialogueView.choiceWait(this, false);
         //处理用户选择
-        System.err.println("choice: "+choice);
+        System.err.println("choice: " + choice);
         try {
             npcHandler.onChoice(this, npcName, choice, choices[choice]);
         } catch (Exception e) {
-            System.err.println("npc对话处理失败，sceneId"+getSceneId()+", npcName: "+npcName+", 错误："+e.getMessage());
+            System.err.println("npc对话处理失败，sceneId" + getSceneId() + ", npcName: " + npcName + ", 错误：" + e.getMessage());
             e.printStackTrace();
         }
         //对话结束
@@ -996,22 +971,22 @@ public class SceneScreen extends Screen {
      * 判断是否可以进入对话
      */
     private boolean canTalkToNpc() {
-        if(npcDialogueView.isExist()){
+        if (npcDialogueView.isExist()) {
             return false;
         }
-        if(targetNpc != null){
+        if (targetNpc != null) {
             Point p0 = getHero().getLocation();
             Point p1 = targetNpc.getLocation();
             int dx = p0.x - p1.x;
             int dy = p0.y - p1.y;
-            if(Math.abs(dx) < 61 && Math.abs(dy) < 61){
+            if (Math.abs(dx) < 61 && Math.abs(dy) < 61) {
                 return true;
             }
         }
         return false;
     }
 
-    public void addNpcHandler(NpcDialogueHandler handler){
+    public void addNpcHandler(NpcDialogueHandler handler) {
         this.npcHandlers.add(handler);
     }
 
@@ -1021,6 +996,57 @@ public class SceneScreen extends Screen {
 
     public TileMap getMap() {
         return map;
+    }
+
+    protected void setMap(MapConfig mapcfg) {
+        try {
+            map = new TileMap(mapcfg);
+            //map.setViewportPosition(200, 300);
+            //map.preload();
+        } catch (Exception e) {
+            System.err.println("加载地图失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+        if (map == null) {
+            return;
+        }
+
+        this.maxWidth = map.getWidth();
+        this.maxHeight = map.getHeight();
+        sceneWidth = map.getWidth() / XYQActivity.STEP_DISTANCE;
+        sceneHeight = map.getHeight() / XYQActivity.STEP_DISTANCE;
+        this.map = map;
+        MapConfig cfg = map.getConfig();
+        this.sceneId = cfg.getId();
+        this.sceneName = cfg.getName();
+
+        //场景跳转点
+/*
+        this.triggerList = new ArrayList<Trigger>();
+        Integer _sceneId = Integer.valueOf(sceneId);
+        List<SceneTeleporter> teleporters = getDataManager().findTeleportersBySceneId(_sceneId);
+        for (int i = 0; i < teleporters.size(); i++) {
+            triggerList.add(new JumpTrigger(teleporters.get(i)));
+        }
+        //场景npc
+        clearNPCs();
+        List<SceneNpc> _npcs = getDataManager().findNpcsBySceneId(_sceneId);
+        for (int i = 0; i < _npcs.size(); i++) {
+            Player npc = getDataManager().createNPC(_npcs.get(i));
+            Point p = sceneToLocal(npc.getSceneLocation());
+            npc.setLocation(p.x, p.y);
+            this.addNPC(npc);
+        }
+
+        // test! get barrier image
+        this.mapMask = new ImageIcon(cfg.getPath().replace(".map", "_bar.png")).getImage();
+*/
+
+        mapBlockData = loadBlock(cfg.getPath().replace(".map", ".msk"));
+        searcher.init(sceneWidth, sceneHeight, mapBlockData);
+        //play music
+        String musicfile = cfg.getPath().replaceAll("\\.map", ".mp3").replaceAll("scene", "music");
+        //TODO 切换场景音乐
     }
 
     public PlayerStatus getHeroStatus() {
@@ -1047,7 +1073,7 @@ public class SceneScreen extends Screen {
             Point p = getPlayerLocation();
             npcHandlers.get(0).onMove(SceneScreen.this, p.x, p.y);
             //2. 触发NPC对话
-            if(canTalkToNpc()){
+            if (canTalkToNpc()) {
                 getHero().stop();
                 invokeLater(new Runnable() {
                     public void run() {
@@ -1064,17 +1090,17 @@ public class SceneScreen extends Screen {
             // 2. 触发地图跳转
             Point p = getPlayerSceneLocation();
             //TODO 临时：跳转到五庄殿内
-            if("1146".equals(getSceneId())){
-                if(p.x >= 57&&p.x<=61 && p.y >= 37 && p.y<=38){
+            if ("1146".equals(getSceneId())) {
+                if (p.x >= 57 && p.x <= 61 && p.y >= 37 && p.y <= 38) {
                     PlayerStatus heroStatus = getHeroStatus();
-                    heroStatus.setSceneLocation(new Point(15,10));
+                    heroStatus.setSceneLocation(new Point(15, 10));
                     XYQActivity.instance().setScreen(SceneHandler.createSceneQkd());
                 }
-            } else if("1147".equals(getSceneId())){
+            } else if ("1147".equals(getSceneId())) {
                 //跳转到五庄外景
-                if(p.x >= 13&&p.x<=16 && p.y >= 6 && p.y<=8){
+                if (p.x >= 13 && p.x <= 16 && p.y >= 6 && p.y <= 8) {
                     PlayerStatus heroStatus = getHeroStatus();
-                    heroStatus.setSceneLocation(new Point(53,34));
+                    heroStatus.setSceneLocation(new Point(53, 34));
                     XYQActivity.instance().setScreen(SceneHandler.createSceneWz());
                 }
 
