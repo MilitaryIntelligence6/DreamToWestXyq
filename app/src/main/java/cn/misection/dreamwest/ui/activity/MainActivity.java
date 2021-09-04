@@ -109,13 +109,14 @@ public class MainActivity extends LGameAndroid2DActivity {
     }
 
     private void exit() {
-        Logger.debug("Timess", String.format("%d", (System.currentTimeMillis() - mLastExitTime)));
+        Logger.debug("Timess", String.format("两次点击退出时间间隔间隔 == %d",
+                (System.currentTimeMillis() - mLastExitTime)));
         if ((System.currentTimeMillis() - mLastExitTime) > 2000) {
             UIHelper.prompt(screen, "再按一次返回退出游戏", 1000);
             mLastExitTime = System.currentTimeMillis();
         } else {
             UIHelper.prompt(screen, "退出游戏", 1000);
-            System.exit(0);
+            onDestroy();
         }
     }
 
