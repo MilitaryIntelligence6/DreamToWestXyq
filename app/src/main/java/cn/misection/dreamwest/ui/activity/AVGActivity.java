@@ -1,4 +1,4 @@
-package cn.misection.dreamwest;
+package cn.misection.dreamwest.ui.activity;
 
 import android.os.Bundle;
 

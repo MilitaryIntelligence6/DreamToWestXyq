@@ -1,4 +1,4 @@
-package cn.misection.dreamwest.view.panels;
+package cn.misection.dreamwest.ui.widget.panels;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

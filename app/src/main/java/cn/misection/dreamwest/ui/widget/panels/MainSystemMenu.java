@@ -1,11 +1,11 @@
-package cn.misection.dreamwest.view.panels;
+package cn.misection.dreamwest.ui.widget.panels;
 
-import cn.misection.dreamwest.SpriteActivity;
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.SpriteActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
-import cn.misection.dreamwest.view.BaseUIBuilder;
-import cn.misection.dreamwest.view.UIHelper;
+import cn.misection.dreamwest.ui.widget.BaseUIBuilder;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 import org.loon.framework.android.game.core.graphics.LColor;
 import org.loon.framework.android.game.core.graphics.LFont;

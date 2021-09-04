@@ -1,10 +1,10 @@
-package cn.misection.dreamwest;
+package cn.misection.dreamwest.ui.activity;
 
 import android.os.Bundle;
 import android.view.Menu;
 
 import cn.misection.dreamwest.scene.SceneHandler;
-import cn.misection.dreamwest.view.UIHelper;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 import org.loon.framework.android.game.LMode;
 

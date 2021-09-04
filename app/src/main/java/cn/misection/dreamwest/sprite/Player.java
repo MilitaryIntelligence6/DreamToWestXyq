@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.graph.AbstractWidget;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;

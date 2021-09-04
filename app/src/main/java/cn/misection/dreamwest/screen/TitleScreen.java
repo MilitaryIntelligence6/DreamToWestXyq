@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
 import cn.misection.dreamwest.scene.SceneHandler;

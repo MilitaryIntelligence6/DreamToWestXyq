@@ -1,6 +1,6 @@
-package cn.misection.dreamwest.view;
+package cn.misection.dreamwest.ui.widget;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 
 import org.loon.framework.android.game.core.graphics.LColor;
 import org.loon.framework.android.game.core.graphics.LComponent;

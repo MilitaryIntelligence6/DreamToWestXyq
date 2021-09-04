@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.event.ActionDelegator;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
@@ -15,8 +15,8 @@ import cn.misection.dreamwest.item.ItemInstance;
 import cn.misection.dreamwest.sprite.Player;
 import cn.misection.dreamwest.sprite.PlayerStatus;
 import cn.misection.dreamwest.sprite.Sprite;
-import cn.misection.dreamwest.view.Label;
-import cn.misection.dreamwest.view.UIHelper;
+import cn.misection.dreamwest.ui.widget.Label;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 import org.loon.framework.android.game.core.LTransition;
 import org.loon.framework.android.game.core.graphics.Screen;

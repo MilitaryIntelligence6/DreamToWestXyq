@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
 import cn.misection.dreamwest.log.Log;
@@ -33,8 +33,8 @@ import cn.misection.dreamwest.sprite.PlayerEvent;
 import cn.misection.dreamwest.sprite.PlayerStatus;
 import cn.misection.dreamwest.sprite.Searcher;
 import cn.misection.dreamwest.util.SearchUtils;
-import cn.misection.dreamwest.view.SRPGChoiceView;
-import cn.misection.dreamwest.view.UIHelper;
+import cn.misection.dreamwest.ui.widget.SRPGChoiceView;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 /**
  * 游戏场景地图界面

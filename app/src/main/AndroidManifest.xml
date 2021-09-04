@@ -6,7 +6,7 @@
 
     <application android:label="@string/app_name">
         <activity
-                android:name="cn.misection.dreamwest.MainActivity"
+                android:name="cn.misection.dreamwest.ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="@string/app_name">
             <intent-filter>
@@ -15,15 +15,15 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="cn.misection.dreamwest.AVGActivity"
+                android:name="cn.misection.dreamwest.ui.activity.AVGActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="AVGTest" />
         <activity
-                android:name="cn.misection.dreamwest.SpriteActivity"
+                android:name="cn.misection.dreamwest.ui.activity.SpriteActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="SpriteTest" />
         <activity
-                android:name="cn.misection.dreamwest.BattleActivity"
+                android:name="cn.misection.dreamwest.ui.activity.BattleActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="BattleTest" />
     </application>

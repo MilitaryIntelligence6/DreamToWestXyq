@@ -1,4 +1,4 @@
-package cn.misection.dreamwest.view;
+package cn.misection.dreamwest.ui.widget;
 
 import android.graphics.Bitmap.Config;
 

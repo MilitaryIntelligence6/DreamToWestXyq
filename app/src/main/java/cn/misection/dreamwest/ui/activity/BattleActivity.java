@@ -1,4 +1,4 @@
-package cn.misection.dreamwest;
+package cn.misection.dreamwest.ui.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import cn.misection.dreamwest.battle.BattleListener;
 import cn.misection.dreamwest.battle.BattleScreen;
 import cn.misection.dreamwest.sprite.Player;
 import cn.misection.dreamwest.sprite.PlayerStatus;
-import cn.misection.dreamwest.view.UIHelper;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 import org.loon.framework.android.game.LMode;
 import org.loon.framework.android.game.core.LSystem;
@@ -21,13 +21,14 @@ import java.util.Random;
 /**
  * Battle 测试
  * Created by IntelliJ IDEA.
- * User: gongdewei
  * Date: 12-3-18
  * Time: 下午6:59
+ * @author Administrator
  */
 public class BattleActivity extends MainActivity {
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
+
     private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;
 
     @Override

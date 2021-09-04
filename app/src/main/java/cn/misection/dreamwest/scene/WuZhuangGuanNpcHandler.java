@@ -4,14 +4,14 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.battle.BattleEvent;
 import cn.misection.dreamwest.battle.BattleHelper;
 import cn.misection.dreamwest.battle.BattleListener;
 import cn.misection.dreamwest.battle.BattleScreen;
 import cn.misection.dreamwest.constant.ExpData;
 import cn.misection.dreamwest.sprite.PlayerStatus;
-import cn.misection.dreamwest.view.UIHelper;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 /**
  * 五庄观NPC对话

@@ -1,9 +1,9 @@
-package cn.misection.dreamwest.view;
+package cn.misection.dreamwest.ui.widget;
 
 import cn.misection.dreamwest.log.Log;
-import cn.misection.dreamwest.view.panels.BattleRoleCommandPanel;
-import cn.misection.dreamwest.view.panels.HeroStatusPanel;
-import cn.misection.dreamwest.view.panels.MainSystemMenu;
+import cn.misection.dreamwest.ui.widget.panels.BattleRoleCommandPanel;
+import cn.misection.dreamwest.ui.widget.panels.HeroStatusPanel;
+import cn.misection.dreamwest.ui.widget.panels.MainSystemMenu;
 
 import org.loon.framework.android.game.core.graphics.Screen;
 import org.loon.framework.android.game.core.graphics.component.LPanel;

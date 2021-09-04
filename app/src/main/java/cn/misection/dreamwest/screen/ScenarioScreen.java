@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.screen;
 
-import cn.misection.dreamwest.MainActivity;
+import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.scene.ScreenCallback;
 
 import org.loon.framework.android.game.action.avg.AVGDialog;
