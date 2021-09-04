@@ -13,10 +13,10 @@ import java.io.InputStream;
  * Time: 下午6:25
  * To change this template use File | Settings | File Templates.
  */
-public class Toolkit {
+public class MyToolkit {
 
     public static InputStream getInputStream(String filename) {
-        InputStream is = Toolkit.class.getResourceAsStream(filename);
+        InputStream is = MyToolkit.class.getResourceAsStream(filename);
         if (is == null) {
             try {
                 if (filename.charAt(0) == '/') {
@@ -29,9 +29,6 @@ public class Toolkit {
                     //    is = CacheManager.getInstance().getResourceAsStream(filename);
                 }
             } catch (FileNotFoundException e) {
-                System.out.println("找不到文件: " + filename);
-                //e.printStackTrace();
-            } catch (IOException e) {
                 System.out.println("找不到文件: " + filename);
                 e.printStackTrace();
             }

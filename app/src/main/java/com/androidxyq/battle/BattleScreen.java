@@ -133,7 +133,9 @@ public class BattleScreen extends Screen {
         canvas.drawBitmap(battleMask, 0, 0, null);
         System.err.println("battleMask: width:" + battleMask.getWidth() + ", height:" + battleMask.getHeight() + ", Density:" + battleMask.getDensity());
 
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        // FIXME: 2021/9/4 save;
+//        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
         if (!bgImage.isMutable()) {
             bgImage.recycle();

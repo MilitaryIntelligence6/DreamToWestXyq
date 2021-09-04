@@ -17,15 +17,15 @@
         <activity
                 android:name=".AVGActivity"
                 android:configChanges="orientation|keyboardHidden"
-                android:label="AVGTest"></activity>
+                android:label="AVGTest" />
         <activity
                 android:name=".SpriteActivity"
                 android:configChanges="orientation|keyboardHidden"
-                android:label="SpriteTest"></activity>
+                android:label="SpriteTest" />
         <activity
                 android:name=".BattleActivity"
                 android:configChanges="orientation|keyboardHidden"
-                android:label="BattleTest"></activity>
+                android:label="BattleTest" />
     </application>
     <uses-sdk android:minSdkVersion="8" />
 

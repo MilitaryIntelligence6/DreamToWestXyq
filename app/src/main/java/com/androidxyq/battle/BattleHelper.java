@@ -136,7 +136,9 @@ public class BattleHelper {
         Bitmap background = Bitmap.createBitmap(scene.getWidth(), scene.getHeight(), Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(background);
         scene.getMap().draw(canvas);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        // FIXME: 2021/9/4 save;
+//        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
         return createBattleScreen(background, hero, battleType);
     }
