@@ -22,6 +22,8 @@ import java.util.Map;
  */
 public class XYQActivity extends LGameAndroid2DActivity {
 
+    private volatile static XYQActivity instance;
+
     public static final float NORMAL_SPEED = 0.13f;
     //    public static final float NORMAL_SPEED = 0.12f;
 //    public static final float BEVEL_SPEED = 0.071f;
@@ -40,7 +42,6 @@ public class XYQActivity extends LGameAndroid2DActivity {
                     2109820, 2194130, 2280657, 2369430, 2460479, 2553832, 2649518, 2747565, 2848002, 2950859, 3056164, 3163946,
                     3274233, 3387054, 3502439, 3620416, 3741014, 3864261, 3990186, 4118819, 4250188, 4384322, 4521249, 4660998, 4803599};
     public static LFont DEFAULT_FONT = LFont.getFont(LSystem.FONT_NAME, 0, 16);
-    private static XYQActivity instance;
     private static boolean debug;
     private static AssetsSound backgroundSound;
     private static AssetsSound effectSound;
@@ -50,6 +51,36 @@ public class XYQActivity extends LGameAndroid2DActivity {
 
     public XYQActivity() {
         instance = this;
+    }
+
+    public static XYQActivity instance() {
+        return instance;
+    }
+
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        try {
+            Class<?> vmRumTimeClass;
+            vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
+            Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
+            vmRumTimeClass.getMethod("setTargetHeapUtilization", Float.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
+            vmRumTimeClass.getMethod("setMinimumHeapSize", Long.TYPE).invoke(runtime, CWJ_HEAP_SIZE);
+        } catch (Exception e) {
+            throw new RuntimeException("设置VM出错！");
+        }
+    }
+
+    @Override
+    public void onMain() {
+        this.maxScreen(640, 480);
+        this.initialization(true, LMode.FitFill);
+        this.setShowLogo(false);
+        this.setShowFPS(true);
+        this.setShowMemory(true);
+        this.setScreen(new TitleScreen());
+        //this.setScreen(new SceneScreen(this));
+        this.showScreen();
     }
 
     public static void playEffectSound(String filename) {
@@ -118,37 +149,6 @@ public class XYQActivity extends LGameAndroid2DActivity {
 
     public static void setDebug(boolean debug) {
         XYQActivity.debug = debug;
-    }
-
-    public static XYQActivity instance() {
-        return instance;
-    }
-
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        try {
-            Class<?> vmRumTimeClass;
-            vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
-            Object runtime = vmRumTimeClass.getMethod("getRuntime").invoke(null);
-            vmRumTimeClass.getMethod("setTargetHeapUtilization", Float.TYPE).invoke(runtime, TARGET_HEAP_UTILIZATION);
-            vmRumTimeClass.getMethod("setMinimumHeapSize", Long.TYPE).invoke(runtime, CWJ_HEAP_SIZE);
-        } catch (Exception e) {
-            throw new RuntimeException("设置VM出错！");
-        }
-    }
-
-    @Override
-    public void onMain() {
-        this.maxScreen(640, 480);
-        this.initialization(true, LMode.FitFill);
-        this.setShowLogo(false);
-        this.setShowFPS(true);
-        this.setShowMemory(true);
-        this.setScreen(new TitleScreen());
-        //this.setScreen(new SceneScreen(this));
-        this.showScreen();
-
     }
 
     @Override
