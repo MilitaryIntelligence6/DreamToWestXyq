@@ -32,8 +32,8 @@ public class BattleActivity extends MainActivity {
     private final static int CWJ_HEAP_SIZE = 5 * 1024 * 1024;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         try {
             Class<?> vmRumTimeClass;
             vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");

@@ -15,8 +15,11 @@ import java.io.Serializable;
 public class ItemInstance implements Serializable {
 
     private static final long serialVersionUID = -4833399832791836608L;
-    transient private Item item;
+
+    private transient Item item;
+
     private int amount;
+
     private long itemId = -1;
 
     public ItemInstance(Item item, int amount) {

@@ -172,6 +172,7 @@ public class Player extends AbstractWidget {
         return data.id;
     }
 
+    @Override
     public int getHeight() {
         if (this.person == null) {
             return 100;
@@ -179,6 +180,7 @@ public class Player extends AbstractWidget {
         return this.person.getHeight();
     }
 
+    @Override
     public int getWidth() {
         if (this.person == null) {
             return 50;

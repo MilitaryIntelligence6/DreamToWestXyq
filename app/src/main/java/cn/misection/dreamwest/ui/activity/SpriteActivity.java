@@ -22,8 +22,8 @@ public class SpriteActivity extends MainActivity {
     private static boolean isMainMenuOpen = false;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         try {
             Class<?> vmRumTimeClass;
             vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");

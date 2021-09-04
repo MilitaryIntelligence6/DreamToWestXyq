@@ -1,6 +1,6 @@
 package cn.misection.dreamwest.ui.widget;
 
-import cn.misection.dreamwest.log.Log;
+import cn.misection.dreamwest.log.Logger;
 import cn.misection.dreamwest.ui.widget.panels.BattleRoleCommandPanel;
 import cn.misection.dreamwest.ui.widget.panels.HeroStatusPanel;
 import cn.misection.dreamwest.ui.widget.panels.MainSystemMenu;
@@ -46,7 +46,7 @@ public class UIFactory {
     public static void registerBuilder(UIBuilder builder) {
         if (builder != null) {
             if (builders.get(builder.getId()) != null) {
-                Log.warn(UIFactory.class, "duplicate UI builders, id: {0}, class: {1} , {2}",
+                Logger.warn(UIFactory.class, "duplicate UI builders, id: {0}, class: {1} , {2}",
                         builder.getId(), builder.getClass(), builders.get(builder.getId()).getClass());
             }
             builders.put(builder.getId(), builder);

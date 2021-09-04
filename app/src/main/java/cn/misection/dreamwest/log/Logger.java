@@ -9,7 +9,7 @@ import java.text.MessageFormat;
  * Date: 12-6-4
  * Time: 下午10:30
  */
-public class Log {
+public class Logger {
     public static void debug(Object clazz, String message) {
         android.util.Log.d(getTagName(clazz), message);
     }

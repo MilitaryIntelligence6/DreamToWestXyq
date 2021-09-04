@@ -43,27 +43,35 @@ public class PlayerAdapter implements PlayerListener {
 //		application.doTalk(p, chat);
 //	}
 
+    @Override
     public void move(Player player, Point increment) {
     }
 
+    @Override
     public void stepOver(Player player) {
     }
 
+    @Override
     public void attack(PlayerEvent evt) {
     }
 
+    @Override
     public void click(PlayerEvent evt) {
     }
 
+    @Override
     public void detect(PlayerEvent evt) {
     }
 
+    @Override
     public void give(PlayerEvent evt) {
     }
 
+    @Override
     public void talk(PlayerEvent evt) {
     }
 
+    @Override
     public void walk(PlayerEvent evt) {
     }
 }

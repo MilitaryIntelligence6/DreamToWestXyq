@@ -18,8 +18,8 @@ public class AVGActivity extends MainActivity {
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         try {
             Class<?> vmRumTimeClass;
             vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");

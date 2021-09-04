@@ -119,10 +119,12 @@ public class Animation extends AbstractWidget {
         currFrame = frames.size() > 0 ? frames.get(0) : null;
     }
 
+    @Override
     public synchronized int getWidth() {
         return (currFrame == null) ? 0 : currFrame.getWidth();
     }
 
+    @Override
     public synchronized int getHeight() {
         return (currFrame == null) ? 0 : currFrame.getHeight();
     }

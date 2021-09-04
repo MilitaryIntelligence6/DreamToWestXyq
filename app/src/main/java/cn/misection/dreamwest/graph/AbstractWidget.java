@@ -40,6 +40,7 @@ public abstract class AbstractWidget implements Widget {
         this.alpha = alpha;
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
@@ -48,6 +49,7 @@ public abstract class AbstractWidget implements Widget {
         this.width = width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
@@ -87,6 +89,7 @@ public abstract class AbstractWidget implements Widget {
                 try {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }

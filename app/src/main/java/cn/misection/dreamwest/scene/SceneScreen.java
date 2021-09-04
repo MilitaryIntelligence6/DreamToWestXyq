@@ -23,7 +23,7 @@ import java.util.List;
 import cn.misection.dreamwest.ui.activity.MainActivity;
 import cn.misection.dreamwest.graph.Animation;
 import cn.misection.dreamwest.graph.SpriteFactory;
-import cn.misection.dreamwest.log.Log;
+import cn.misection.dreamwest.log.Logger;
 import cn.misection.dreamwest.map.MapConfig;
 import cn.misection.dreamwest.map.TileMap;
 import cn.misection.dreamwest.sprite.OptimizeAStar;
@@ -744,11 +744,11 @@ public class SceneScreen extends Screen {
             return;
         }
         Point p = this.getPlayerSceneLocation();
-        Log.debug(this, "walk to: ({0},{1}) -> ({2},{3})", p.x, p.y, x, y);
+        Logger.debug(this, "walk to: ({0},{1}) -> ({2},{3})", p.x, p.y, x, y);
         long t1 = System.currentTimeMillis(), t2;
         this.path = this.findPath(x, y);
         t2 = System.currentTimeMillis();
-        Log.debug(this, "findPath cost: {0} s", (t2 - t1) / 1000.0);
+        Logger.debug(this, "findPath cost: {0} s", (t2 - t1) / 1000.0);
         if (path != null) {
             getHero().setPath(path);
             getHero().move();
@@ -759,7 +759,7 @@ public class SceneScreen extends Screen {
 
     public void walkToView(int x, int y) {
         Point p = this.viewToScene(new Point(x, y));
-        Log.debug(this, "walkToView: (" + x + "," + y + ") , viewport: (" + viewportX + "," + viewportY + ")  => scene: (" + p.x + "," + p.y + ")");
+        Logger.debug(this, "walkToView: (" + x + "," + y + ") , viewport: (" + viewportX + "," + viewportY + ")  => scene: (" + p.x + "," + p.y + ")");
         this.walkTo(p.x, p.y);
     }
 
@@ -784,7 +784,7 @@ public class SceneScreen extends Screen {
         try {
             return searcher.findPath(source.x, source.y, target.x, target.y);
         } catch (Exception e) {
-            Log.error(this, "查找路径失败, target：(" + x + "," + y + "), msg: " + e.getMessage(), e);
+            Logger.error(this, "查找路径失败, target：(" + x + "," + y + "), msg: " + e.getMessage(), e);
         }
         return null;
     }
@@ -814,7 +814,7 @@ public class SceneScreen extends Screen {
                 for (int yi = 0; yi < yy.length; yi++) {
                     if (pass(xx[xi], yy[yi])) {
                         target = new Point(xx[xi], yy[yi]);
-                        Log.debug(this, "find nearest reachable pos: ({0},{1})", target.x, target.y);
+                        Logger.debug(this, "find nearest reachable pos: ({0},{1})", target.x, target.y);
                         return target;
                     }
                 }
@@ -835,7 +835,7 @@ public class SceneScreen extends Screen {
                 Point p = path.get(i);
                 if (pass(p.x, p.y)) {
                     target = p;
-                    Log.debug(this, "find nearest line reachable pos: ({0},{1})", target.x, target.y);
+                    Logger.debug(this, "find nearest line reachable pos: ({0},{1})", target.x, target.y);
                     return target;
                 }
                 path.remove(i);
@@ -1062,11 +1062,13 @@ public class SceneScreen extends Screen {
      */
     private final class ScenePlayerHandler extends PlayerAdapter {
 
+        @Override
         public void walk(PlayerEvent evt) {
             Point coords = evt.getCoords();
             walkTo(coords.x, coords.y);
         }
 
+        @Override
         public void stepOver(Player player) {
             // 1. 更新场景坐标
             syncSceneAndPlayer();
@@ -1083,6 +1085,7 @@ public class SceneScreen extends Screen {
             }
         }
 
+        @Override
         public void move(Player player, Point increment) {
             // 1. 更新场景坐标
             syncSceneAndPlayer();

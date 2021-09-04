@@ -1,7 +1,7 @@
 package cn.misection.dreamwest.ui.widget;
 
 import cn.misection.dreamwest.ui.activity.MainActivity;
-import cn.misection.dreamwest.log.Log;
+import cn.misection.dreamwest.log.Logger;
 
 import org.loon.framework.android.game.core.graphics.LComponent;
 import org.loon.framework.android.game.core.graphics.Screen;
@@ -43,7 +43,7 @@ public class UIHelper {
 
 
     public static void showDialog(Screen screen, String dialogId, Map<String, Object> params, boolean nocache) {
-        Log.debug(UIHelper.class, "showDialog: " + dialogId);
+        Logger.debug(UIHelper.class, "showDialog: " + dialogId);
         LPanel panel = uiCache.get(dialogId);
         if (panel == null || nocache || MainActivity.isDebug()) {
             panel = UIFactory.createDialog(screen, dialogId, params);
@@ -57,7 +57,7 @@ public class UIHelper {
     }
 
     public static void hideDialog(Screen screen, String dialogId) {
-        Log.debug(UIHelper.class, "hideDialog: " + dialogId);
+        Logger.debug(UIHelper.class, "hideDialog: " + dialogId);
         LPanel panel = uiCache.get(dialogId);
         if (panel != null) {
             screen.remove(panel);
@@ -73,7 +73,7 @@ public class UIHelper {
     }
 
     public static void toogleDialog(Screen screen, String dialogId, Map<String, Object> params, boolean nocache) {
-        Log.debug(UIHelper.class, "toogleDialog: " + dialogId);
+        Logger.debug(UIHelper.class, "toogleDialog: " + dialogId);
         if (hasPanel(screen, dialogId)) {
             hideDialog(screen, dialogId);
         } else {
@@ -96,7 +96,7 @@ public class UIHelper {
     }
 
     public static void prompt(final Screen screen, String msg, int timeout) {
-        Log.debug(UIHelper.class, "prompt: " + msg + ", " + timeout);
+        Logger.debug(UIHelper.class, "prompt: " + msg + ", " + timeout);
         //TODO  完善提示信息展示
         final PromptLabel promptLabel = createPromptLabel(msg);
         screen.add(promptLabel);

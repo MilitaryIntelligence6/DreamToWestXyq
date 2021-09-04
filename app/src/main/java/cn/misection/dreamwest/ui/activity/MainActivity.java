@@ -1,8 +1,11 @@
 package cn.misection.dreamwest.ui.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
+import cn.misection.dreamwest.log.Logger;
 import cn.misection.dreamwest.screen.TitleScreen;
+import cn.misection.dreamwest.ui.widget.UIHelper;
 
 import org.loon.framework.android.game.LGameAndroid2DActivity;
 import org.loon.framework.android.game.LMode;
@@ -24,9 +27,14 @@ public class MainActivity extends LGameAndroid2DActivity {
 
     private volatile static MainActivity instance;
 
+    private long mLastExitTime;
+
     public static final float NORMAL_SPEED = 0.13f;
+
     //    public static final float NORMAL_SPEED = 0.12f;
-//    public static final float BEVEL_SPEED = 0.071f;
+
+    //    public static final float BEVEL_SPEED = 0.071f;
+
     public static final int STEP_DISTANCE = 20;
 
     private final static float TARGET_HEAP_UTILIZATION = 0.99f;
@@ -65,8 +73,8 @@ public class MainActivity extends LGameAndroid2DActivity {
     }
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         try {
             Class<?> vmRumTimeClass;
             vmRumTimeClass = Class.forName("dalvik.system.VMRuntime");
@@ -88,6 +96,27 @@ public class MainActivity extends LGameAndroid2DActivity {
         this.setScreen(new TitleScreen());
         //this.setScreen(new SceneScreen(this));
         this.showScreen();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent e) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && e.getRepeatCount() == 0) {
+            // 按下BACK，同时没有重复
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, e);
+    }
+
+    private void exit() {
+        Logger.debug("Timess", String.format("%d", (System.currentTimeMillis() - mLastExitTime)));
+        if ((System.currentTimeMillis() - mLastExitTime) > 2000) {
+            UIHelper.prompt(screen, "再按一次返回退出游戏", 1000);
+            mLastExitTime = System.currentTimeMillis();
+        } else {
+            UIHelper.prompt(screen, "退出游戏", 1000);
+            System.exit(0);
+        }
     }
 
     public static void playEffectSound(String filename) {
